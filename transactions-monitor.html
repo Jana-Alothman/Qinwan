@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions Monitor - Qinwan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">Qinwan</h1>
+        <ul class="nav-links">
+            <li><a href="index.html">Browse Farms</a></li>
+            <li><a href="investor.html">Investor</a></li>
+            <li><a href="farmer.html">Farmer</a></li>
+            <li><a href="admin.html" class="active-admin-link">Admin</a></li>
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="register.html" class="btn">Get Started</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="admin-page">
+    <section class="admin-heading">
+        <h2>Transactions Monitor</h2>
+        <p>Track all submitted investment requests and monitor suspicious activity.</p>
+    </section>
+
+    <section class="admin-filter-buttons">
+        <button class="filter-pill active-filter" data-tx-filter="all">All</button>
+        <button class="filter-pill" data-tx-filter="Pending">Pending</button>
+        <button class="filter-pill" data-tx-filter="Accepted">Accepted</button>
+        <button class="filter-pill" data-tx-filter="Rejected">Rejected</button>
+        <button class="filter-pill" data-tx-filter="Completed">Completed</button>
+    </section>
+
+    <section class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Investor</th>
+                    <th>Farmer</th>
+                    <th>Farm</th>
+                    <th>Area</th>
+                    <th>Duration</th>
+                    <th>Harvest Method</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Flag</th>
+                </tr>
+            </thead>
+            <tbody id="transactionsTableBody"></tbody>
+        </table>
+    </section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

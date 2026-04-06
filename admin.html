@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Qinwan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <h1 class="logo">Qinwan</h1>
+            <ul class="nav-links">
+                <li><a href="index.html">Browse Farms</a></li>
+                <li><a href="investor.html">Investor</a></li>
+                <li><a href="farmer.html">Farmer</a></li>
+                <li><a href="admin.html" class="active-admin-link">Admin</a></li>
+                <li><a href="login.html">Sign In</a></li>
+                <li><a href="register.html" class="btn">Get Started</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="admin-page">
+        <section class="admin-heading">
+            <h2>Platform Statistics</h2>
+            <p>Monitor overall performance and manage all platform operations.</p>
+        </section>
+
+        <section class="admin-stats-grid">
+            <div class="admin-stat-card">
+                <h3>Total Farms</h3>
+                <p id="totalFarmsStat">0</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Total Users</h3>
+                <p id="totalUsersStat">0</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Transactions</h3>
+                <p id="totalTransactionsStat">0</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Leased Area</h3>
+                <p id="leasedAreaStat">0 m²</p>
+            </div>
+
+            <div class="admin-stat-card">
+                <h3>Trading Volume</h3>
+                <p id="tradingVolumeStat">0 SAR</p>
+            </div>
+        </section>
+
+        <section class="admin-panel-grid">
+            <a href="users-management.html" class="admin-panel-card">
+                <h3>Users Management</h3>
+                <p>View, search, filter, verify, and manage registered users.</p>
+            </a>
+
+            <a href="farms-management.html" class="admin-panel-card">
+                <h3>Farms Management</h3>
+                <p>Review farm submissions, approve farms, edit listings, and deactivate violations.</p>
+            </a>
+
+            <a href="transactions-monitor.html" class="admin-panel-card">
+                <h3>Transactions Monitor</h3>
+                <p>Track all investment requests, statuses, suspicious activity, and details.</p>
+            </a>
+
+            <a href="complaints-queue.html" class="admin-panel-card">
+                <h3>Complaints Queue</h3>
+                <p>Receive, review, update, and resolve user complaints fairly.</p>
+            </a>
+
+            <a href="activity-logs.html" class="admin-panel-card">
+                <h3>Activity Logs</h3>
+                <p>Audit important user and system actions with timestamps and affected entities.</p>
+            </a>
+
+            <a href="content-moderation.html" class="admin-panel-card">
+                <h3>Content Moderation</h3>
+                <p>Remove violating updates and edit minor issues in user-generated content.</p>
+            </a>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

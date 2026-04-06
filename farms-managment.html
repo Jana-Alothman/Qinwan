@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farms Management - Qinwan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <nav class="navbar">
+        <h1 class="logo">Qinwan</h1>
+        <ul class="nav-links">
+            <li><a href="index.html">Browse Farms</a></li>
+            <li><a href="investor.html">Investor</a></li>
+            <li><a href="farmer.html">Farmer</a></li>
+            <li><a href="admin.html" class="active-admin-link">Admin</a></li>
+            <li><a href="login.html">Sign In</a></li>
+            <li><a href="register.html" class="btn">Get Started</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="admin-page">
+    <section class="admin-heading">
+        <h2>Farms Management</h2>
+        <p>Review submissions, approve listings, edit fields, deactivate, or delete farms.</p>
+    </section>
+
+    <section class="admin-toolbar">
+        <input type="text" id="farmSearchInput" placeholder="Search by farm name or owner">
+        <select id="farmStatusFilter">
+            <option value="all">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="Approved">Approved</option>
+            <option value="Rejected">Rejected</option>
+            <option value="Deactivated">Deactivated</option>
+        </select>
+    </section>
+
+    <section class="admin-cards-list" id="farmsCardsContainer"></section>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
