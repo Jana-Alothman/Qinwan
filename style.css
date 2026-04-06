@@ -1,0 +1,287 @@
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 700px;
+    padding: 40px;
+}
+
+.auth-box h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 56px;
+    text-align: center;
+    color: #6E5242;
+    margin-bottom: 12px;
+}
+
+.auth-box p {
+    text-align: center;
+    color: #8A6F5A;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.auth-box label {
+    display: block;
+    margin: 18px 0 10px;
+    font-weight: 600;
+    color: #6E5242;
+}
+
+.auth-box input {
+    width: 100%;
+    padding: 18px;
+    border: 1px solid #d9c8b0;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.auth-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 18px;
+    background: #4f7f49;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+}
+
+.role-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.role-btn {
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid #d9c8b0;
+    background: white;
+}
+
+.role-btn.active {
+    background: #4f7f49;
+    color: white;
+}
+
+.auth-link {
+    text-align: center;
+    margin-top: 24px;
+}
+
+.auth-link a {
+    color: #4f7f49;
+    text-decoration: none;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600&display=swap');
+```css
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
+}
+
+body {
+    background-color: #f7f4ef;
+    color: #5c4634;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: white;
+}
+
+.logo {
+    color: #3f6f45;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 25px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #5c4634;
+}
+
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(60,45,30,0.35), rgba(60,45,30,0.35)), url('farm.jpg') center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.overlay {
+    display: none;
+}
+
+.hero-content {
+    position: relative;
+    text-align: center;
+    color: white;
+    z-index: 2;
+}
+
+.hero-content h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 22px;
+    margin-bottom: 30px;
+}
+
+.btn, .btn-outline {
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    margin: 10px;
+}
+
+.btn {
+    background: #3f6f45;
+    color: white;
+}
+
+.btn-outline {
+    border: 1px solid white;
+    color: white;
+}
+
+.about, .features, .steps {
+    padding: 120px 80px;
+    text-align: center;
+}
+
+.about h2, .features h2, .steps h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 64px;
+    margin-bottom: 30px;
+    color: #6E5242;
+}
+
+.about p {
+    max-width: 900px;
+    margin: 0 auto;
+    font-size: 24px;
+    line-height: 1.8;
+}
+
+.cards, .step-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.step-card {
+    flex: 1;
+    text-align: center;
+}
+
+.step-number {
+    display: block;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 64px;
+    color: #C8D0C1;
+    margin-bottom: 18px;
+}
+
+.step-card h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 24px;
+    color: #6E5242;
+    margin-bottom: 16px;
+}
+
+.step-card p {
+    font-size: 18px;
+    line-height: 1.6;
+    color: #8A6F5A;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.card {
+    text-align: left;
+}
+
+.card h3 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 28px;
+    color: #6E5242;
+    margin-bottom: 24px;
+}
+
+.card p {
+    font-size: 18px;
+    line-height: 1.8;
+    color: #8A6F5A;
+}
+
+.card {
+    padding: 40px;
+    background: #fff;
+    border: 1px solid #e2d9cf;
+    border-radius: 16px;
+    width: 360px;
+    min-height: 180px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    font-size: 28px;
+}
+
+footer {
+    background: #eee8df;
+    padding: 60px 50px 30px;
+    border-top: 1px solid #ddd2c4;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 60px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #ddd2c4;
+}
+
+.footer-column h4, .footer-logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: #6E5242;
+    margin-bottom: 18px;
+}
+
+.footer-logo {
+    color: #3f6f45;
+    font-size: 24px;
+}
+
+.footer-column p {
+    color: #8A6F5A;
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 8px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 25px;
+    color: #8A6F5A;
+    font-size: 16px;
+}
