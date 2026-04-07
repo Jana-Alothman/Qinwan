@@ -1,38 +1,159 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>توثيق حسابات المزارعين - قنوان</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-    <nav class="navbar">
-        <h1 class="logo">Qinwan</h1>
-        <ul class="nav-links">
-            <li><a href="index.html">تصفح المزارع</a></li>
-            <li><a href="investor.html">المستثمر</a></li>
-            <li><a href="farmer.html">المزارع</a></li>
-            <li><a href="admin.html" class="active-admin-link">الإدارة</a></li>
-            <li><a href="login.html">تسجيل الدخول</a></li>
-            <li><a href="register.html" class="btn">ابدأ الآن</a></li>
-        </ul>
-    </nav>
-</header>
+<nav>
+    <button class="nav-back" onclick="window.location.href='admin.html'">العودة</button>
+
+    <div class="nav-links">
+        <button class="nav-link" onclick="window.location.href='admin.html'">لوحة الإدارة</button>
+        <button class="nav-link" onclick="window.location.href='users-managment.html'">المستخدمون</button>
+        <button class="nav-link" onclick="window.location.href='farms-managment.html'">المزارع</button>
+        <button class="nav-link active" onclick="window.location.href='farmer-verification.html'">توثيق المزارعين</button>
+        <button class="nav-link" onclick="window.location.href='activity-logs.html'">السجل</button>
+    </div>
+
+    <div class="nav-logo" onclick="window.location.href='admin.html'">
+        <img class="logo-img" src="logo.png" alt="قنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="logo-fallback" style="display:none">ق</div>
+        <div>
+            <span class="logo-name">قنوان</span>
+            <span class="logo-sub">توثيق المزارعين</span>
+        </div>
+    </div>
+</nav>
 
 <main class="admin-page admin-rtl">
-    <section class="admin-heading">
-        <h2>توثيق حسابات المزارعين</h2>
-        <p>مراجعة الهوية الوطنية ومستندات ملكية المزرعة، ثم اعتماد أو رفض الطلب مع ملاحظة إجبارية.</p>
-    </section>
+    <div class="page-content">
 
-    <section class="admin-toolbar">
-        <input type="text" id="verificationSearchInput" placeholder="ابحث باسم المزارع">
-    </section>
+        <div class="page-title-wrap">
+            <h1 class="page-title">توثيق حسابات المزارعين</h1>
+            <div class="title-ornament">
+                <div class="orn-line" style="width:60px"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-dot"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-line" style="width:24px"></div>
+            </div>
+        </div>
 
-    <section class="admin-cards-list" id="verificationCardsContainer"></section>
+        <p style="color: var(--text-muted); margin-bottom: 28px;">
+            مراجعة الهوية الوطنية ومستندات ملكية المزرعة، ثم اعتماد أو رفض الطلب مع ملاحظة إجبارية.
+        </p>
+
+        <section class="admin-toolbar">
+            <input type="text" id="verificationSearchInput" placeholder="ابحث باسم المزارع" />
+        </section>
+
+        <section class="admin-cards-list" id="verificationCardsContainer">
+
+            <article class="admin-record-card">
+                <h3>سارة العتيبي</h3>
+                <p><strong>اسم المزرعة:</strong> مزرعة النخيل المبارك</p>
+                <p><strong>المنطقة:</strong> القصيم</p>
+                <p><strong>الحالة:</strong> <span class="status-badge status-pending">قيد التوثيق</span></p>
+
+                <div class="verification-documents">
+                    <div class="verification-doc-box">
+                        <h4>رقم الهوية الوطنية</h4>
+                        <div class="national-id-number">1098 4521 773</div>
+                        <p style="margin-top:10px;">حالة التحقق: <span class="not-verified-badge">بانتظار المراجعة</span></p>
+                    </div>
+
+                    <div class="verification-doc-box">
+                        <h4>مستند ملكية المزرعة</h4>
+                        <iframe
+                            class="ownership-pdf-frame"
+                            src="sample-ownership.pdf"
+                            title="مستند ملكية المزرعة">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:16px;">
+                    <label class="form-label">ملاحظة المشرف</label>
+                    <textarea class="form-textarea" placeholder="اكتب سبب الرفض أو الملاحظة المطلوبة قبل اتخاذ القرار"></textarea>
+                </div>
+
+                <div class="admin-card-actions">
+                    <button class="admin-action-btn btn-approve">اعتماد</button>
+                    <button class="admin-action-btn btn-reject">رفض</button>
+                    <button class="admin-action-btn btn-secondary">طلب معلومات إضافية</button>
+                </div>
+            </article>
+
+            <article class="admin-record-card">
+                <h3>عبدالله الدوسري</h3>
+                <p><strong>اسم المزرعة:</strong> مزرعة الواحة الذهبية</p>
+                <p><strong>المنطقة:</strong> الرياض</p>
+                <p><strong>الحالة:</strong> <span class="status-badge status-approved">موثق</span></p>
+
+                <div class="verification-documents">
+                    <div class="verification-doc-box">
+                        <h4>رقم الهوية الوطنية</h4>
+                        <div class="national-id-number">1014 6628 542</div>
+                        <p style="margin-top:10px;">حالة التحقق: <span class="verified-badge">تم التحقق</span></p>
+                    </div>
+
+                    <div class="verification-doc-box">
+                        <h4>مستند ملكية المزرعة</h4>
+                        <iframe
+                            class="ownership-pdf-frame"
+                            src="sample-ownership.pdf"
+                            title="مستند ملكية المزرعة">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="admin-card-actions">
+                    <button class="admin-action-btn btn-secondary">عرض التفاصيل</button>
+                </div>
+            </article>
+
+            <article class="admin-record-card">
+                <h3>محمد العتيبي</h3>
+                <p><strong>اسم المزرعة:</strong> مزرعة نخيل الأحساء</p>
+                <p><strong>المنطقة:</strong> الأحساء</p>
+                <p><strong>الحالة:</strong> <span class="status-badge status-rejected">مرفوض</span></p>
+
+                <div class="verification-documents">
+                    <div class="verification-doc-box">
+                        <h4>رقم الهوية الوطنية</h4>
+                        <div class="national-id-number">1077 3194 228</div>
+                        <p style="margin-top:10px;">حالة التحقق: <span class="flag-badge">بيانات غير مكتملة</span></p>
+                    </div>
+
+                    <div class="verification-doc-box">
+                        <h4>مستند ملكية المزرعة</h4>
+                        <iframe
+                            class="ownership-pdf-frame"
+                            src="sample-ownership.pdf"
+                            title="مستند ملكية المزرعة">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top:16px;">
+                    <label class="form-label">سبب الرفض</label>
+                    <textarea class="form-textarea" placeholder="مثال: المستند المرفوع غير واضح أو لا يثبت الملكية بشكل كافٍ"></textarea>
+                </div>
+
+                <div class="admin-card-actions">
+                    <button class="admin-action-btn btn-reject">تأكيد الرفض</button>
+                    <button class="admin-action-btn btn-secondary">طلب إعادة رفع المستند</button>
+                </div>
+            </article>
+
+        </section>
+
+    </div>
 </main>
 
 <script src="script2.js"></script>

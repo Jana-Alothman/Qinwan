@@ -1,39 +1,167 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المزارع - قنوان</title>
-    <link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-    <nav class="navbar">
-        <h1 class="logo">Qinwan</h1>
-        <ul class="nav-links">
-            <li><a href="index.html">تصفح المزارع</a></li>
-            <li><a href="investor.html">المستثمر</a></li>
-            <li><a href="farmer.html">المزارع</a></li>
-            <li><a href="admin.html" class="active-admin-link">الإدارة</a></li>
-            <li><a href="login.html">تسجيل الدخول</a></li>
-            <li><a href="register.html" class="btn">ابدأ الآن</a></li>
-        </ul>
-    </nav>
-</header>
+<nav>
+    <button class="nav-back" onclick="window.location.href='admin.html'">العودة</button>
+
+    <div class="nav-links">
+        <button class="nav-link" onclick="window.location.href='admin.html'">لوحة الإدارة</button>
+        <button class="nav-link" onclick="window.location.href='users-managment.html'">المستخدمون</button>
+        <button class="nav-link active" onclick="window.location.href='farms-managment.html'">المزارع</button>
+        <button class="nav-link" onclick="window.location.href='transactions-monitor.html'">المعاملات</button>
+        <button class="nav-link" onclick="window.location.href='activity-logs.html'">السجل</button>
+    </div>
+
+    <div class="nav-logo" onclick="window.location.href='admin.html'">
+        <img class="logo-img" src="logo.png" alt="قنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="logo-fallback" style="display:none">ق</div>
+        <div>
+            <span class="logo-name">قنوان</span>
+            <span class="logo-sub">إدارة المزارع</span>
+        </div>
+    </div>
+</nav>
 
 <main class="admin-page admin-rtl">
-    <section class="admin-heading">
-        <h2>إدارة المزارع</h2>
-        <p>مراجعة المزارع واعتمادها وتعديلها وتعطيلها أو حذفها.</p>
-    </section>
+    <div class="page-content">
 
-<section class="admin-toolbar">
-    <input type="text" id="farmSearchInput" placeholder="ابحث باسم المزرعة أو اسم المالك">
-</section>
+        <div class="page-title-wrap">
+            <h1 class="page-title">إدارة المزارع</h1>
+            <div class="title-ornament">
+                <div class="orn-line" style="width:60px"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-dot"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-line" style="width:24px"></div>
+            </div>
+        </div>
 
-<section id="farmRequestsContainer" class="admin-cards-list"></section>
+        <p style="color: var(--text-muted); margin-bottom: 28px;">
+            مراجعة جميع المزارع، متابعة حالتها، والبحث أو التصفية حسب المنطقة أو حالة الطلب.
+        </p>
+
+        <section class="admin-toolbar">
+            <input type="text" id="farmSearchInput" placeholder="ابحث باسم المزرعة" />
+
+            <select id="farmRegionFilter">
+                <option value="all">كل المناطق</option>
+                <option value="Riyadh">الرياض</option>
+                <option value="Qassim">القصيم</option>
+                <option value="Madinah">المدينة المنورة</option>
+                <option value="Al Ahsa">الأحساء</option>
+            </select>
+
+            <select id="farmStatusFilter">
+                <option value="all">كل الحالات</option>
+                <option value="Approved">معتمدة</option>
+                <option value="Pending Review">قيد المراجعة</option>
+                <option value="Rejected">مرفوضة</option>
+                <option value="Suspended">معلقة</option>
+            </select>
+        </section>
+
+        <section class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>اسم المزرعة</th>
+                        <th>المالك</th>
+                        <th>المنطقة</th>
+                        <th>المساحة</th>
+                        <th>نوع النخيل</th>
+                        <th>الحالة</th>
+                        <th>الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody id="farmsManagementTableBody">
+                    <tr>
+                        <td>مزرعة الواحة الذهبية</td>
+                        <td>عبدالله الدوسري</td>
+                        <td>الرياض</td>
+                        <td>12000 م²</td>
+                        <td>سكري</td>
+                        <td><span class="status-badge status-active">معتمدة</span></td>
+                        <td>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="admin-action-btn btn-secondary">عرض</button>
+                                <button class="admin-action-btn btn-primary">تعديل</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>مزرعة النخيل المبارك</td>
+                        <td>سارة العتيبي</td>
+                        <td>القصيم</td>
+                        <td>8500 م²</td>
+                        <td>خلاص</td>
+                        <td><span class="status-badge status-pending">قيد المراجعة</span></td>
+                        <td>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="admin-action-btn btn-primary">اعتماد</button>
+                                <button class="admin-action-btn btn-danger">رفض</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>مزرعة طيبة للتمور</td>
+                        <td>خالد الحربي</td>
+                        <td>المدينة المنورة</td>
+                        <td>15000 م²</td>
+                        <td>عجوة</td>
+                        <td><span class="status-badge status-suspended">معلقة</span></td>
+                        <td>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="admin-action-btn btn-secondary">عرض</button>
+                                <button class="admin-action-btn btn-primary">إعادة تفعيل</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>مزرعة نخيل الأحساء</td>
+                        <td>محمد العتيبي</td>
+                        <td>الأحساء</td>
+                        <td>9700 م²</td>
+                        <td>رزيز</td>
+                        <td><span class="status-badge status-danger">مرفوضة</span></td>
+                        <td>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="admin-action-btn btn-secondary">عرض السبب</button>
+                                <button class="admin-action-btn btn-primary">طلب تعديل</button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>مزرعة السعف الأخضر</td>
+                        <td>ناصر القحطاني</td>
+                        <td>الرياض</td>
+                        <td>11000 م²</td>
+                        <td>صفري</td>
+                        <td><span class="status-badge status-active">معتمدة</span></td>
+                        <td>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="admin-action-btn btn-secondary">عرض</button>
+                                <button class="admin-action-btn btn-danger">تعليق</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
+</main>
 
 <script src="script2.js"></script>
 </body>

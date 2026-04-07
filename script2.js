@@ -525,7 +525,7 @@ function renderUsersManagement() {
     let users = getUsers().filter(user => user.role !== "Admin");
 
     users = users.filter(user => {
-        const matchesSearch = user.name.toLowerCase().includes(search); // البحث بالاسم فقط
+        const matchesSearch = user.name.toLowerCase().includes(search);
         const matchesRole = roleFilter === "all" || user.role === roleFilter;
         const matchesStatus = statusFilter === "all" || user.status === statusFilter;
 
@@ -533,19 +533,16 @@ function renderUsersManagement() {
     });
 
     if (users.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5">لا يوجد مستخدمون مطابقون.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4">لا يوجد مستخدمون مطابقون.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = users.map(user => `
         <tr>
-            <td>${user.name}</td>
+            <td class="clickable-name" onclick="viewUserProfile('${user.id}')">${user.name}</td>
             <td>${getRoleLabel(user.role)}</td>
             <td>${user.registrationDate}</td>
             <td>${getStatusBadge(user.status)}</td>
-            <td>
-                <button class="admin-action-btn btn-secondary" onclick="viewUserProfile('${user.id}')">عرض الملف</button>
-            </td>
         </tr>
     `).join("");
 }
@@ -559,9 +556,6 @@ function viewUserProfile(userId) {
 
     if (!user) return;
 
-    const profileSection = document.getElementById("selectedUserProfileSection");
-    const profileContent = document.getElementById("selectedUserProfileContent");
-
     let relatedFarms = [];
     let relatedTransactions = [];
     let relatedComplaints = [];
@@ -570,133 +564,57 @@ function viewUserProfile(userId) {
     if (user.role === "Farm Owner") {
         relatedFarms = farms.filter(farm => farm.ownerId === user.id);
         relatedTransactions = transactions.filter(tx => tx.farmerId === user.id);
-        relatedComplaints = complaints.filter(c => {
-            return relatedTransactions.some(tx => tx.id === c.relatedTransactionId);
-        });
+        relatedComplaints = complaints.filter(c =>
+            relatedTransactions.some(tx => tx.id === c.relatedTransactionId)
+        );
         relatedLogs = logs.filter(log => log.userId === user.id);
     } else if (user.role === "Investor") {
         relatedTransactions = transactions.filter(tx => tx.investorId === user.id);
-        relatedFarms = farms.filter(farm => {
-            return relatedTransactions.some(tx => tx.farmId === farm.id);
-        });
+        relatedFarms = farms.filter(farm =>
+            relatedTransactions.some(tx => tx.farmId === farm.id)
+        );
         relatedComplaints = complaints.filter(c => c.submitterId === user.id);
         relatedLogs = logs.filter(log => log.userId === user.id);
     }
 
-    profileContent.innerHTML = `
-        <div class="admin-record-card user-profile-main-card">
-            <h3>الملف الشخصي للمستخدم</h3>
-            <div class="user-profile-grid">
-                <div class="user-info-box">
-                    <span class="info-label">الاسم</span>
-                    <span class="info-value">${user.name}</span>
-                </div>
-                <div class="user-info-box">
-                    <span class="info-label">الدور</span>
-                    <span class="info-value">${getRoleLabel(user.role)}</span>
-                </div>
-                <div class="user-info-box">
-                    <span class="info-label">البريد الإلكتروني</span>
-                    <span class="info-value">${user.email}</span>
-                </div>
-                <div class="user-info-box">
-                    <span class="info-label">تاريخ التسجيل</span>
-                    <span class="info-value">${user.registrationDate}</span>
-                </div>
-                <div class="user-info-box">
-                    <span class="info-label">الحالة</span>
-                    <span class="info-value">${getStatusBadge(user.status)}</span>
-                </div>
-                <div class="user-info-box">
-                    <span class="info-label">عدد السجلات المرتبطة</span>
-                    <span class="info-value">${relatedFarms.length + relatedTransactions.length + relatedComplaints.length + relatedLogs.length}</span>
-                </div>
-            </div>
-        </div>
+    const modal = document.getElementById("userModal");
+    const modalName = document.getElementById("modalName");
+    const modalRole = document.getElementById("modalRole");
+    const modalDate = document.getElementById("modalDate");
+    const modalStatus = document.getElementById("modalStatus");
+    const modalEmail = document.getElementById("modalEmail");
+    const modalFarmCount = document.getElementById("modalFarmCount");
+    const modalTransactionCount = document.getElementById("modalTransactionCount");
+    const modalComplaintCount = document.getElementById("modalComplaintCount");
+    const modalActivity = document.getElementById("modalActivity");
 
-        <div class="admin-record-card user-profile-main-card">
-            <h3>النشاط</h3>
-            <div class="activity-summary-grid">
-                <div class="activity-mini-card">
-                    <span class="activity-number">${relatedFarms.length}</span>
-                    <span class="activity-label">${user.role === "Farm Owner" ? "مزارع مسجلة" : "مزارع مرتبطة بالاستثمار"}</span>
-                </div>
-                <div class="activity-mini-card">
-                    <span class="activity-number">${relatedTransactions.length}</span>
-                    <span class="activity-label">المعاملات</span>
-                </div>
-                <div class="activity-mini-card">
-                    <span class="activity-number">${relatedComplaints.length}</span>
-                    <span class="activity-label">الشكاوى</span>
-                </div>
-                <div class="activity-mini-card">
-                    <span class="activity-number">${relatedLogs.length}</span>
-                    <span class="activity-label">سجلات النشاط</span>
-                </div>
-            </div>
-        </div>
+    if (!modal || !modalName || !modalRole || !modalDate || !modalStatus || !modalEmail || !modalFarmCount || !modalTransactionCount || !modalComplaintCount || !modalActivity) {
+        return;
+    }
 
-        <div class="details-section-title">بطاقات المزارع المرتبطة بالمستخدم</div>
-        <div class="admin-cards-list">
-            ${
-                relatedFarms.length > 0
-                    ? relatedFarms.map(farm => `
-                        <div class="admin-record-card farm-details-card">
-                            <h3>${farm.farmName}</h3>
-                            <p><strong>رقم المزرعة:</strong> ${farm.id}</p>
-                            <p><strong>اسم المالك:</strong> ${farm.ownerName}</p>
-                            <p><strong>البريد الإلكتروني للمالك:</strong> ${farm.ownerEmail}</p>
-                            <p><strong>الموقع:</strong> ${farm.location}</p>
-                            <p><strong>المساحة:</strong> ${farm.area} م²</p>
-                            <p><strong>نوع النخل:</strong> ${farm.palmType}</p>
-                            <p><strong>عدد الصور:</strong> ${farm.photos}</p>
-                            <p><strong>الحالة:</strong> ${getStatusBadge(farm.status)}</p>
-                            <p><strong>الوصف:</strong> ${farm.description}</p>
-                        </div>
-                    `).join("")
-                    : `<div class="admin-record-card"><p>لا توجد مزارع مرتبطة بهذا المستخدم.</p></div>`
-            }
-        </div>
+    modalName.textContent = user.name;
+    modalRole.textContent = getRoleLabel(user.role);
+    modalDate.textContent = user.registrationDate;
+    modalStatus.textContent = user.status;
+    modalEmail.textContent = user.email || "-";
+    modalFarmCount.textContent = relatedFarms.length;
+    modalTransactionCount.textContent = relatedTransactions.length;
+    modalComplaintCount.textContent = relatedComplaints.length;
 
-        <div class="details-section-title">آخر المعاملات المرتبطة</div>
-        <div class="admin-cards-list">
-            ${
-                relatedTransactions.length > 0
-                    ? relatedTransactions.map(tx => `
-                        <div class="admin-record-card">
-                            <h3>${tx.farmName}</h3>
-                            <p><strong>رقم المعاملة:</strong> ${tx.id}</p>
-                            <p><strong>المستثمر:</strong> ${tx.investorName}</p>
-                            <p><strong>المزارع:</strong> ${tx.farmerName}</p>
-                            <p><strong>المساحة:</strong> ${tx.area} م²</p>
-                            <p><strong>المدة:</strong> ${tx.duration}</p>
-                            <p><strong>طريقة الحصاد:</strong> ${tx.harvestMethod}</p>
-                            <p><strong>الحالة:</strong> ${getStatusBadge(tx.status)}</p>
-                            <p><strong>التاريخ:</strong> ${tx.date}</p>
-                        </div>
-                    `).join("")
-                    : `<div class="admin-record-card"><p>لا توجد معاملات مرتبطة بهذا المستخدم.</p></div>`
-            }
-        </div>
+    if (relatedLogs.length > 0) {
+        modalActivity.innerHTML = relatedLogs.map(log => `
+            <li>${log.actionType} - ${log.entity} <br><small>${log.timestamp}</small></li>
+        `).join("");
+    } else if (relatedTransactions.length > 0) {
+        modalActivity.innerHTML = relatedTransactions.map(tx => `
+            <li>معاملة ${tx.id} في ${tx.farmName} - الحالة: ${tx.status}</li>
+        `).join("");
+    } else {
+        modalActivity.innerHTML = `<li>لا يوجد نشاط لهذا المستخدم.</li>`;
+    }
 
-        <div class="details-section-title">سجل النشاط</div>
-        <div class="admin-cards-list">
-            ${
-                relatedLogs.length > 0
-                    ? relatedLogs.map(log => `
-                        <div class="admin-record-card">
-                            <h3>${log.actionType}</h3>
-                            <p><strong>الكيان المرتبط:</strong> ${log.entity}</p>
-                            <p><strong>التاريخ والوقت:</strong> ${log.timestamp}</p>
-                        </div>
-                    `).join("")
-                    : `<div class="admin-record-card"><p>لا توجد سجلات نشاط لهذا المستخدم.</p></div>`
-            }
-        </div>
-    `;
-
-    profileSection.style.display = "block";
-    profileSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
 }
 
 /* =========================
@@ -1250,4 +1168,25 @@ document.getElementById("logDateFrom")?.addEventListener("change", renderActivit
 document.getElementById("logDateTo")?.addEventListener("change", renderActivityLogs);
 document.getElementById("logDateFrom")?.addEventListener("input", renderActivityLogs);
 document.getElementById("logDateTo")?.addEventListener("input", renderActivityLogs);
+});
+
+function closeUserModal() {
+    const modal = document.getElementById("userModal");
+    if (!modal) return;
+
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+}
+
+window.addEventListener("click", function(event) {
+    const modal = document.getElementById("userModal");
+    if (modal && event.target === modal) {
+        closeUserModal();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeUserModal();
+    }
 });

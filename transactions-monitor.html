@@ -1,66 +1,152 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>مراقبة المعاملات - قنوان</title>
-    <link rel="stylesheet" href="style.css">
-
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-    <nav class="navbar">
-        <h1 class="logo">Qinwan</h1>
-        <ul class="nav-links">
-            <li><a href="index.html">تصفح المزارع</a></li>
-            <li><a href="investor.html">المستثمر</a></li>
-            <li><a href="farmer.html">المزارع</a></li>
-            <li><a href="admin.html" class="active-admin-link">الإدارة</a></li>
-            <li><a href="login.html">تسجيل الدخول</a></li>
-            <li><a href="register.html" class="btn">ابدأ الآن</a></li>
-        </ul>
-    </nav>
-</header>
+<nav>
+    <button class="nav-back" onclick="window.location.href='admin.html'">العودة</button>
+
+    <div class="nav-links">
+        <button class="nav-link" onclick="window.location.href='admin.html'">لوحة الإدارة</button>
+        <button class="nav-link" onclick="window.location.href='users-managment.html'">المستخدمون</button>
+        <button class="nav-link" onclick="window.location.href='farms-managment.html'">المزارع</button>
+        <button class="nav-link active" onclick="window.location.href='transactions-monitor.html'">المعاملات</button>
+        <button class="nav-link" onclick="window.location.href='activity-logs.html'">السجل</button>
+    </div>
+
+    <div class="nav-logo" onclick="window.location.href='admin.html'">
+        <img class="logo-img" src="logo.png" alt="قنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="logo-fallback" style="display:none">ق</div>
+        <div>
+            <span class="logo-name">قنوان</span>
+            <span class="logo-sub">مراقبة المعاملات</span>
+        </div>
+    </div>
+</nav>
 
 <main class="admin-page admin-rtl">
-    <section class="admin-heading">
-        <h2>مراقبة المعاملات</h2>
-        <p>عرض جميع المعاملات الاستثمارية والتحقق من سلامتها المالية.</p>
-    </section>
+    <div class="page-content">
 
-   <section class="admin-toolbar">
-    <select id="transactionStatusFilter">
-        <option value="all">كل الحالات</option>
-        <option value="Pending">قيد المراجعة</option>
-        <option value="Accepted">مقبولة</option>
-        <option value="Rejected">مرفوضة</option>
-        <option value="Completed">مكتملة</option>
-    </select>
+        <div class="page-title-wrap">
+            <h1 class="page-title">مراقبة المعاملات</h1>
+            <div class="title-ornament">
+                <div class="orn-line" style="width:60px"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-dot"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-line" style="width:24px"></div>
+            </div>
+        </div>
 
-    <input type="date" id="transactionDateFrom" placeholder="من تاريخ">
-    <input type="date" id="transactionDateTo" placeholder="إلى تاريخ">
-</section>
+        <p style="color: var(--text-muted); margin-bottom: 28px;">
+            عرض جميع المعاملات الاستثمارية، مع إمكانية التصفية حسب الحالة أو التاريخ ومتابعة أي تنبيهات مشبوهة.
+        </p>
 
-    <section class="admin-table-wrapper">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>اسم المستثمر</th>
-                    <th>اسم المزارع</th>
-                    <th>اسم المزرعة</th>
-                    <th>المساحة</th>
-                    <th>المدة</th>
-                    <th>طريقة الحصاد</th>
-                    <th>الحالة</th>
-                    <th>التاريخ</th>
-                    <th>التفاصيل</th>
-                    <th>التنبيه</th>
-                </tr>
-            </thead>
-            <tbody id="transactionsTableBody"></tbody>
-        </table>
-    </section>
+        <section class="admin-toolbar">
+            <select id="transactionStatusFilter">
+                <option value="all">كل الحالات</option>
+                <option value="Pending">قيد المراجعة</option>
+                <option value="Accepted">مقبولة</option>
+                <option value="Rejected">مرفوضة</option>
+                <option value="Completed">مكتملة</option>
+            </select>
+
+            <input type="date" id="transactionDateFrom" placeholder="من تاريخ" />
+            <input type="date" id="transactionDateTo" placeholder="إلى تاريخ" />
+        </section>
+
+        <section class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>اسم المستثمر</th>
+                        <th>اسم المزارع</th>
+                        <th>اسم المزرعة</th>
+                        <th>المساحة</th>
+                        <th>المدة</th>
+                        <th>طريقة الحصاد</th>
+                        <th>الحالة</th>
+                        <th>التاريخ</th>
+                        <th>التفاصيل</th>
+                        <th>التنبيه</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionsTableBody">
+                    <tr>
+                        <td>هيا حمد</td>
+                        <td>عبدالله الدوسري</td>
+                        <td>مزرعة الواحة الذهبية</td>
+                        <td>250 م²</td>
+                        <td>6 أشهر</td>
+                        <td>استلام التمر</td>
+                        <td><span class="status-badge status-pending">قيد المراجعة</span></td>
+                        <td>2026-04-03</td>
+                        <td><button class="admin-action-btn btn-secondary">عرض</button></td>
+                        <td><span class="normal-badge">طبيعي</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>ريم المطيري</td>
+                        <td>ناصر القحطاني</td>
+                        <td>مزرعة السعف الأخضر</td>
+                        <td>400 م²</td>
+                        <td>سنة</td>
+                        <td>بيع المحصول</td>
+                        <td><span class="status-badge status-active">مقبولة</span></td>
+                        <td>2026-03-28</td>
+                        <td><button class="admin-action-btn btn-secondary">عرض</button></td>
+                        <td><span class="normal-badge">طبيعي</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>محمد القحطاني</td>
+                        <td>سارة العتيبي</td>
+                        <td>مزرعة النخيل المبارك</td>
+                        <td>600 م²</td>
+                        <td>8 أشهر</td>
+                        <td>تبرع بالمحصول</td>
+                        <td><span class="status-badge status-danger">مرفوضة</span></td>
+                        <td>2026-03-19</td>
+                        <td><button class="admin-action-btn btn-secondary">عرض</button></td>
+                        <td><span class="flag-badge">تنبيه</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>سارة العنزي</td>
+                        <td>خالد الحربي</td>
+                        <td>مزرعة طيبة للتمور</td>
+                        <td>300 م²</td>
+                        <td>4 أشهر</td>
+                        <td>استلام التمر</td>
+                        <td><span class="status-badge status-active">مكتملة</span></td>
+                        <td>2026-02-27</td>
+                        <td><button class="admin-action-btn btn-secondary">عرض</button></td>
+                        <td><span class="normal-badge">طبيعي</span></td>
+                    </tr>
+
+                    <tr>
+                        <td>لولوة الشمري</td>
+                        <td>محمد العتيبي</td>
+                        <td>مزرعة نخيل الأحساء</td>
+                        <td>900 م²</td>
+                        <td>سنتان</td>
+                        <td>بيع المحصول</td>
+                        <td><span class="status-badge status-pending">قيد المراجعة</span></td>
+                        <td>2026-04-06</td>
+                        <td><button class="admin-action-btn btn-secondary">عرض</button></td>
+                        <td><span class="flag-badge">مشبوه</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
 </main>
 
 <script src="script2.js"></script>

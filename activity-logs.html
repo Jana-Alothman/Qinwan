@@ -1,54 +1,123 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>سجل النشاط - قنوان</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<header>
-    <nav class="navbar">
-        <h1 class="logo">Qinwan</h1>
-        <ul class="nav-links">
-            <li><a href="index.html">تصفح المزارع</a></li>
-            <li><a href="investor.html">المستثمر</a></li>
-            <li><a href="farmer.html">المزارع</a></li>
-            <li><a href="admin.html" class="active-admin-link">الإدارة</a></li>
-            <li><a href="login.html">تسجيل الدخول</a></li>
-            <li><a href="register.html" class="btn">ابدأ الآن</a></li>
-        </ul>
-    </nav>
-</header>
+<nav>
+    <button class="nav-back" onclick="window.location.href='admin.html'">العودة</button>
+
+    <div class="nav-links">
+        <button class="nav-link" onclick="window.location.href='admin.html'">لوحة الإدارة</button>
+        <button class="nav-link" onclick="window.location.href='users-managment.html'">المستخدمون</button>
+        <button class="nav-link" onclick="window.location.href='farms-managment.html'">المزارع</button>
+        <button class="nav-link" onclick="window.location.href='transactions-monitor.html'">المعاملات</button>
+        <button class="nav-link active" onclick="window.location.href='activity-logs.html'">السجل</button>
+    </div>
+
+    <div class="nav-logo" onclick="window.location.href='admin.html'">
+        <img class="logo-img" src="logo.png" alt="قنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="logo-fallback" style="display:none">ق</div>
+        <div>
+            <span class="logo-name">قنوان</span>
+            <span class="logo-sub">سجل النشاط</span>
+        </div>
+    </div>
+</nav>
 
 <main class="admin-page admin-rtl">
-    <section class="admin-heading">
-        <h2>سجل النشاط</h2>
-        <p>تدقيق جميع إجراءات النظام والمستخدمين مع الوقت والكيان المتأثر.</p>
-    </section>
+    <div class="page-content">
 
-    <section class="admin-toolbar">
-    <input type="text" id="logSearchInput" placeholder="ابحث باسم المستخدم أو نوع الإجراء">
+        <div class="page-title-wrap">
+            <h1 class="page-title">سجل النشاط</h1>
+            <div class="title-ornament">
+                <div class="orn-line" style="width:60px"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-dot"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-line" style="width:24px"></div>
+            </div>
+        </div>
 
-    <input type="date" id="logDateFrom">
-    <input type="date" id="logDateTo">
-</section>
+        <p style="color: var(--text-muted); margin-bottom: 28px;">
+            تدقيق جميع إجراءات النظام والمستخدمين مع الوقت والكيان المتأثر، مع إمكانية البحث والتصفية بالتاريخ.
+        </p>
 
-    <section class="admin-table-wrapper">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>معرف المستخدم</th>
-                    <th>اسم المستخدم</th>
-                    <th>نوع الإجراء</th>
-                    <th>الكيان المتأثر</th>
-                    <th>الوقت</th>
-                </tr>
-            </thead>
-            <tbody id="activityLogsTableBody"></tbody>
-        </table>
-    </section>
+        <section class="admin-toolbar">
+            <input type="text" id="logSearchInput" placeholder="ابحث باسم المستخدم أو نوع الإجراء" />
+            <input type="date" id="logDateFrom" />
+            <input type="date" id="logDateTo" />
+        </section>
+
+        <section class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>معرف المستخدم</th>
+                        <th>اسم المستخدم</th>
+                        <th>نوع الإجراء</th>
+                        <th>الكيان المتأثر</th>
+                        <th>الوقت</th>
+                    </tr>
+                </thead>
+                <tbody id="activityLogsTableBody">
+                    <tr>
+                        <td>U102</td>
+                        <td>عبدالله الدوسري</td>
+                        <td>اعتماد مزرعة</td>
+                        <td>مزرعة الواحة الذهبية</td>
+                        <td>2026-04-07 10:35 ص</td>
+                    </tr>
+
+                    <tr>
+                        <td>A001</td>
+                        <td>مشرف النظام</td>
+                        <td>تعليق حساب</td>
+                        <td>محمد القحطاني</td>
+                        <td>2026-04-06 02:10 م</td>
+                    </tr>
+
+                    <tr>
+                        <td>F205</td>
+                        <td>سارة العتيبي</td>
+                        <td>إرسال طلب تسجيل مزرعة</td>
+                        <td>مزرعة النخيل المبارك</td>
+                        <td>2026-04-05 08:55 ص</td>
+                    </tr>
+
+                    <tr>
+                        <td>A001</td>
+                        <td>مشرف النظام</td>
+                        <td>رفض مزرعة</td>
+                        <td>مزرعة نخيل الأحساء</td>
+                        <td>2026-04-04 01:20 م</td>
+                    </tr>
+
+                    <tr>
+                        <td>U118</td>
+                        <td>هيا حمد</td>
+                        <td>إرسال طلب استثمار</td>
+                        <td>مزرعة الواحة الذهبية</td>
+                        <td>2026-04-03 11:47 ص</td>
+                    </tr>
+
+                    <tr>
+                        <td>A001</td>
+                        <td>مشرف النظام</td>
+                        <td>تحديث معاملة</td>
+                        <td>طلب استثمار #INV-301</td>
+                        <td>2026-04-03 03:30 م</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+    </div>
 </main>
 
 <script src="script2.js"></script>

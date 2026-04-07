@@ -1,65 +1,249 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>إدارة المستخدمين - قنوان</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
+
+    <style>
+        .clickable-name {
+            color: #B56A63;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .clickable-name:hover {
+            color: #C9857A;
+            text-decoration: underline;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #fffaf6;
+            width: 95%;
+            max-width: 700px;
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.18);
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 14px;
+            left: 18px;
+            cursor: pointer;
+            font-size: 28px;
+            color: #B56A63;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .modal-box h2 {
+            margin: 0 0 18px;
+            color: #B56A63;
+            font-size: 1.5rem;
+        }
+
+        .modal-profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .modal-info-card {
+            background: #f8efe8;
+            border-radius: 14px;
+            padding: 14px;
+            border: 1px solid rgba(181, 106, 99, 0.12);
+        }
+
+        .modal-info-card .label {
+            display: block;
+            font-size: 0.9rem;
+            color: #8d6e63;
+            margin-bottom: 6px;
+        }
+
+        .modal-info-card .value {
+            font-weight: 700;
+            color: #5d4037;
+        }
+
+        .modal-section {
+            margin-top: 18px;
+            background: #f8efe8;
+            border-radius: 14px;
+            padding: 16px;
+            border: 1px solid rgba(181, 106, 99, 0.12);
+        }
+
+        .modal-section h3 {
+            margin: 0 0 12px;
+            color: #B56A63;
+            font-size: 1.05rem;
+        }
+
+        .modal-section ul {
+            margin: 0;
+            padding-right: 20px;
+        }
+
+        .modal-section li {
+            margin-bottom: 8px;
+            color: #5d4037;
+        }
+    </style>
 </head>
 <body>
 
-<header>
-    <nav class="navbar">
-        <h1 class="logo">قنوان</h1>
-        <ul class="nav-links">
-            <li><a href="admin.html" class="active-admin-link">لوحة التحكم</a></li>
-        </ul>
-    </nav>
-</header>
+<nav>
+    <button class="nav-back" onclick="window.location.href='admin.html'">العودة</button>
 
-<main class="admin-page">
+    <div class="nav-links">
+        <button class="nav-link" onclick="window.location.href='admin.html'">لوحة الإدارة</button>
+        <button class="nav-link active" onclick="window.location.href='users-managment.html'">المستخدمون</button>
+        <button class="nav-link" onclick="window.location.href='farms-managment.html'">المزارع</button>
+        <button class="nav-link" onclick="window.location.href='transactions-monitor.html'">المعاملات</button>
+        <button class="nav-link" onclick="window.location.href='activity-logs.html'">السجل</button>
+    </div>
 
-    <section class="admin-heading">
-        <h2>إدارة المستخدمين</h2>
-        <p>عرض جميع المستثمرين والمزارعين، مع إمكانية البحث بالاسم والتصفية حسب الدور أو الحالة.</p>
-    </section>
+    <div class="nav-logo" onclick="window.location.href='admin.html'">
+        <img class="logo-img" src="logo.png" alt="قنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="logo-fallback" style="display:none">ق</div>
+        <div>
+            <span class="logo-name">قنوان</span>
+            <span class="logo-sub">إدارة المستخدمين</span>
+        </div>
+    </div>
+</nav>
 
-    <!-- البحث والفلاتر -->
-    <section class="admin-toolbar">
+<main class="admin-page admin-rtl">
+    <div class="page-content">
 
-        <input type="text" id="userSearchInput" placeholder="ابحث باسم المستخدم">
+        <div class="page-title-wrap">
+            <h1 class="page-title">إدارة المستخدمين</h1>
+            <div class="title-ornament">
+                <div class="orn-line" style="width:60px"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-dot"></div>
+                <div class="orn-diamond"></div>
+                <div class="orn-line" style="width:24px"></div>
+            </div>
+        </div>
 
-        <select id="userRoleFilter">
-            <option value="all">كل الأدوار</option>
-            <option value="Investor">مستثمر</option>
-            <option value="Farm Owner">مزارع</option>
-        </select>
+        <p style="color: var(--text-muted); margin-bottom: 28px;">
+            عرض جميع المستثمرين والمزارعين، مع إمكانية البحث بالاسم والتصفية حسب الدور أو الحالة.
+        </p>
 
-        <select id="userStatusFilter">
-            <option value="all">كل الحالات</option>
-            <option value="Active">نشط</option>
-            <option value="Suspended">موقوف</option>
-        </select>
+        <section class="admin-toolbar">
+            <input type="text" id="userSearchInput" placeholder="ابحث باسم المستخدم" oninput="renderUsersManagement()" />
 
-    </section>
+            <select id="userRoleFilter" onchange="renderUsersManagement()">
+                <option value="all">كل الأدوار</option>
+                <option value="Investor">مستثمر</option>
+                <option value="Farm Owner">مزارع</option>
+            </select>
 
-    <!-- الجدول -->
-    <section class="admin-table-wrapper">
-        <table class="admin-table">
-            <thead>
-                <tr>
-                    <th>الاسم</th>
-                    <th>الدور</th>
-                    <th>تاريخ التسجيل</th>
-                    <th>الحالة</th>
-                    <th>عرض الملف</th>
-                </tr>
-            </thead>
-            <tbody id="usersManagementTableBody"></tbody>
-        </table>
-    </section>
+            <select id="userStatusFilter" onchange="renderUsersManagement()">
+                <option value="all">كل الحالات</option>
+                <option value="Active">نشط</option>
+                <option value="Suspended">موقوف</option>
+                <option value="Pending Verification">بانتظار التوثيق</option>
+            </select>
+        </section>
 
+        <section class="admin-table-wrapper">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الدور</th>
+                        <th>تاريخ التسجيل</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody id="usersManagementTableBody">
+                </tbody>
+            </table>
+        </section>
+
+    </div>
 </main>
+
+<!-- USER POPUP -->
+<div id="userModal" class="modal-overlay">
+    <div class="modal-box">
+        <span class="close-btn" onclick="closeUserModal()">×</span>
+
+        <h2>الملف الشخصي والنشاط</h2>
+
+        <div class="modal-profile-grid">
+            <div class="modal-info-card">
+                <span class="label">الاسم</span>
+                <span class="value" id="modalName">-</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">الدور</span>
+                <span class="value" id="modalRole">-</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">تاريخ التسجيل</span>
+                <span class="value" id="modalDate">-</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">الحالة</span>
+                <span class="value" id="modalStatus">-</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">البريد الإلكتروني</span>
+                <span class="value" id="modalEmail">-</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">عدد المزارع المرتبطة</span>
+                <span class="value" id="modalFarmCount">0</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">عدد المعاملات</span>
+                <span class="value" id="modalTransactionCount">0</span>
+            </div>
+
+            <div class="modal-info-card">
+                <span class="label">عدد الشكاوى</span>
+                <span class="value" id="modalComplaintCount">0</span>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <h3>سجل النشاط</h3>
+            <ul id="modalActivity">
+                <li>لا يوجد نشاط.</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
 <script src="script2.js"></script>
 </body>
