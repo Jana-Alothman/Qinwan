@@ -678,7 +678,27 @@ nav::after {
   color: #6B4800;
   border: 1px solid rgba(200,146,42,0.3);
 }
+/* العنوان الكبير */
+.stat-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #2f3e2f; /* أخضر غامق أنيق */
+  margin-bottom: 6px;
+}
 
+/* الرقم */
+.stat-value {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1e4d2b;
+}
+
+/* النص الصغير */
+.stat-sub {
+  font-size: 13px;
+  color: #a08b7a;
+  margin-top: 6px;
+}
 /* قائمة التحديثات */
 .updates-list {
   padding: 8px 0;
@@ -843,7 +863,135 @@ nav::after {
   background: var(--green-dark);
   transform: translateY(-2px);
 }
+.stars {
+  color: gold;
+  font-size: 16px;
+  margin-top: 5px;
+}
+.btn-explore {
+  background: #c8922a;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 22px;
+  min-width: 120px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 4px 10px rgba(200, 146, 42, 0.25);
+}
 
+.btn-explore:hover {
+  background: #ad7d1f;
+  transform: translateY(-1px);
+}
+
+.farm-popup-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.farm-popup-card {
+  background: #fff;
+  width: 100%;
+  max-width: 460px;
+  border-radius: 20px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+  text-align: right;
+  animation: popupFade 0.22s ease;
+}
+
+@keyframes popupFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.farm-popup-close {
+  position: absolute;
+  top: 12px;
+  left: 14px;
+  background: transparent;
+  border: none;
+  font-size: 30px;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+.farm-popup-image {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  background: #f3efe8;
+}
+
+.farm-popup-title {
+  margin: 8px 0 14px;
+  color: #2d2a26;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.farm-popup-details p {
+  margin: 8px 0;
+  color: #4a433d;
+  line-height: 1.9;
+  font-size: 15px;
+}
+
+.farm-popup-details strong {
+  color: #2f3b1f;
+}
+
+#popupInvestBtn {
+  width: 100%;
+  margin-top: 16px;
+}
+.farm-name-green {
+  color: #2f5e2f; 
+  font-weight: 800;
+}
+
+.farm-details-red {
+  color: #A63D2A; 
+
+
+}
+.farm-popup-details p {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+
+.farm-popup-details strong {
+  color: #7a2a1d;
+}
+
+
+
+
+
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 /* قائمة الرغبات */
 .wishlist-container {
   background: var(--bg-white);

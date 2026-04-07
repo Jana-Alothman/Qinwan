@@ -533,3 +533,32 @@ document.addEventListener('DOMContentLoaded', function() {
   renderCart();
   renderInvestorRequests();
 });
+function openFarmPopup(name, image, region, type, totalArea, availableArea, production, price) {
+  document.getElementById("popupFarmName").textContent = name;
+  document.getElementById("popupFarmImage").src = image;
+  document.getElementById("popupFarmRegion").textContent = region;
+  document.getElementById("popupFarmType").textContent = type;
+  document.getElementById("popupFarmTotalArea").textContent = totalArea;
+  document.getElementById("popupFarmAvailableArea").textContent = availableArea;
+  document.getElementById("popupFarmProduction").textContent = production;
+  document.getElementById("popupFarmPrice").textContent = price;
+
+  const popupInvestBtn = document.getElementById("popupInvestBtn");
+  popupInvestBtn.onclick = function () {
+    addToCart(name, parseInt(price));
+    closeFarmPopup();
+  };
+
+  document.getElementById("farmPopup").style.display = "flex";
+}
+
+function closeFarmPopup() {
+  document.getElementById("farmPopup").style.display = "none";
+}
+
+window.addEventListener("click", function (e) {
+  const popup = document.getElementById("farmPopup");
+  if (e.target === popup) {
+    closeFarmPopup();
+  }
+});

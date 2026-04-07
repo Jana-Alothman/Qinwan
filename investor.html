@@ -83,27 +83,36 @@
 
     <!-- إحصائيات — بيانات من جداول Investment وTransaction -->
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">إجمالي المستثمر</div>
-        <div class="stat-value">٥٠,٠٠٠ ر.س</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">الاستثمارات النشطة</div>
-        <div class="stat-value">٣</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">الطلبات المعلقة</div>
-        <div class="stat-value">٢</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">قائمة الرغبات</div>
-        <div class="stat-value">٤</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">العائد المتوقع</div>
-        <div class="stat-value">٨,٥٠٠ ر.س</div>
-      </div>
-    </div>
+  <div class="stat-card">
+    <div class="stat-label">إجمالي الاستثمار</div>
+    <div class="stat-value">٥٠,٠٠٠ ر.س</div>
+    <div class="stat-sub">موزعة على ٣ مزارع</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">الاستثمارات النشطة</div>
+    <div class="stat-value">٣</div>
+    <div class="stat-sub">جارية حالياً</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">الطلبات المعلقة</div>
+    <div class="stat-value">٢</div>
+    <div class="stat-sub">قيد المراجعة</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">قائمة الرغبات</div>
+    <div class="stat-value">٤</div>
+    <div class="stat-sub">مزارع محفوظة</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">العائد المتوقع</div>
+    <div class="stat-value">٨,٥٠٠ ر.س</div>
+    <div class="stat-sub">أرباح متوقعة من الاستثمارات</div>
+  </div>
+</div>
 
     <div class="two-columns">
       <!-- استثماراتي -->
@@ -204,7 +213,7 @@
 
     <!-- قائمة المزارع -->
     <div id="farms-list">
-      <div class="farm-card" data-name="مزرعة النخيل الذهبية" data-region="الرياض">
+      <div class="farm-card" data-name="مزرعة النخيل العقيلي" data-region="القصيم">
         <div class="farm-card-inner">
           <div class="palm-icon">
             <svg width="28" height="32" viewBox="0 0 40 50" fill="#4f7f49">
@@ -212,22 +221,33 @@
             </svg>
           </div>
           <div class="farm-details">
-            <div class="farm-name">مزرعة النخيل الذهبية</div>
-            <div class="farm-meta">الرياض · سكري</div>
-            <div class="farm-stats-row">
-              <span>المساحة المتاحة: ٢,٠٠٠ م²</span>
-              <span>الإنتاج الموسمي: ١٢,٠٠٠ كجم</span>
-            </div>
+            <div class="farm-name">مزرعة  العقيلي</div>
+             <div class="stars">
+              ★★★★★
+              </div>
+            <div class="farm-meta">القصيم · سكري</div>
+           
             <div class="farm-price">سعر المتر: ٢٥ ر.س/م²</div>
           </div>
           <div class="farm-actions">
-            <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'مزرعة النخيل الذهبية', 'الرياض', '٢٥')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <use href="#icon-heart"/>
-              </svg>
-            </button>
-            <button class="btn-invest" onclick="addToCart('مزرعة النخيل الذهبية', 25)">استثمر الآن</button>
-          </div>
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'مزرعة العقيلي', 'القصيم', '٢٥')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'مزرعة العقيلي',
+    'القصيم',
+    'سكري',
+    '٣,٠٠٠ م²',
+    '٢,٠٠٠ م²',
+    '١٢,٠٠٠ كجم',
+    '٢٥ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('مزرعة العقيلي', 25)">استثمر الآن</button>
+</div>
         </div>
       </div>
 
@@ -240,21 +260,32 @@
           </div>
           <div class="farm-details">
             <div class="farm-name">واحة العجوة المباركة</div>
+            <div class="stars">
+              ★★★☆
+              </div>
             <div class="farm-meta">المدينة المنورة · عجوة</div>
-            <div class="farm-stats-row">
-              <span>المساحة المتاحة: ١,٥٠٠ م²</span>
-              <span>الإنتاج الموسمي: ٨,٠٠٠ كجم</span>
-            </div>
             <div class="farm-price">سعر المتر: ٣٠ ر.س/م²</div>
           </div>
           <div class="farm-actions">
-            <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'واحة العجوة المباركة', 'المدينة', '٣٠')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <use href="#icon-heart"/>
-              </svg>
-            </button>
-            <button class="btn-invest" onclick="addToCart('واحة العجوة المباركة', 30)">استثمر الآن</button>
-          </div>
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'واحة العجوة المباركة', 'المدينة', '٣٠')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'واحة العجوة المباركة',
+    'images/farm-ajwa.jpg',
+    'المدينة المنورة',
+    'عجوة',
+    '٢,٥٠٠ م²',
+    '١,٥٠٠ م²',
+    '٨,٠٠٠ كجم',
+    '٣٠ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('واحة العجوة المباركة', 30)">استثمر الآن</button>
+</div>
         </div>
       </div>
 
@@ -267,21 +298,32 @@
           </div>
           <div class="farm-details">
             <div class="farm-name">مزارع الخلاص الأصيلة</div>
+            <div class="stars">
+              ★★★☆☆
+              </div>
             <div class="farm-meta">القصيم · خلاص</div>
-            <div class="farm-stats-row">
-              <span>المساحة المتاحة: ٣,٠٠٠ م²</span>
-              <span>الإنتاج الموسمي: ٢٠,٠٠٠ كجم</span>
-            </div>
             <div class="farm-price">سعر المتر: ٢٠ ر.س/م²</div>
           </div>
           <div class="farm-actions">
-            <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'مزارع الخلاص الأصيلة', 'القصيم', '٢٠')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <use href="#icon-heart"/>
-              </svg>
-            </button>
-            <button class="btn-invest" onclick="addToCart('مزارع الخلاص الأصيلة', 20)">استثمر الآن</button>
-          </div>
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'مزارع الخلاص الأصيلة', 'القصيم', '٢٠')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'مزارع الخلاص الأصيلة',
+    'images/farm-khalas.jpg',
+    'القصيم',
+    'خلاص',
+    '٤,٠٠٠ م²',
+    '٣,٠٠٠ م²',
+    '٢٠,٠٠٠ كجم',
+    '٢٠ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('مزارع الخلاص الأصيلة', 20)">استثمر الآن</button>
+</div>
         </div>
       </div>
 
@@ -294,21 +336,32 @@
           </div>
           <div class="farm-details">
             <div class="farm-name">نخيل البرحي الفاخر</div>
+            <div class="stars">
+              ★★★☆☆
+              </div>
             <div class="farm-meta">الأحساء · برحي</div>
-            <div class="farm-stats-row">
-              <span>المساحة المتاحة: ٢,٥٠٠ م²</span>
-              <span>الإنتاج الموسمي: ١٥,٠٠٠ كجم</span>
-            </div>
             <div class="farm-price">سعر المتر: ٢٢ ر.س/م²</div>
           </div>
           <div class="farm-actions">
-            <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'نخيل البرحي الفاخر', 'الأحساء', '٢٢')">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <use href="#icon-heart"/>
-              </svg>
-            </button>
-            <button class="btn-invest" onclick="addToCart('نخيل البرحي الفاخر', 22)">استثمر الآن</button>
-          </div>
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'نخيل البرحي الفاخر', 'الأحساء', '٢٢')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'نخيل البرحي الفاخر',
+    'images/farm-barhi.jpg',
+    'الأحساء',
+    'برحي',
+    '٣,٢٠٠ م²',
+    '٢,٥٠٠ م²',
+    '١٥,٠٠٠ كجم',
+    '٢٢ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('نخيل البرحي الفاخر', 22)">استثمر الآن</button>
+</div>
         </div>
       </div>
     </div>
@@ -433,7 +486,27 @@
 
 <!-- Toast إشعار -->
 <div class="toast" id="toast"></div>
+<div id="farmPopup" class="farm-popup-overlay">
+  <div class="farm-popup-card">
+    <button class="farm-popup-close" onclick="closeFarmPopup()">×</button>
 
+    <img id="popupFarmImage" class="farm-popup-image" src="" alt="صورة المزرعة">
+
+<h2 id="popupFarmName" class="farm-popup-title farm-name-green"></h2>
+
+<div class="farm-popup-details farm-details-red">
+    <div class="farm-popup-details">
+      <p><strong>المنطقة:</strong> <span id="popupFarmRegion"></span></p>
+      <p><strong>نوع التمر:</strong> <span id="popupFarmType"></span></p>
+      <p><strong>المساحة الكلية:</strong> <span id="popupFarmTotalArea"></span></p>
+      <p><strong>المساحة المتاحة:</strong> <span id="popupFarmAvailableArea"></span></p>
+      <p><strong>الإنتاج الموسمي:</strong> <span id="popupFarmProduction"></span></p>
+      <p><strong>سعر المتر:</strong> <span id="popupFarmPrice"></span></p>
+    </div>
+
+    <button id="popupInvestBtn" class="btn-invest">استثمر الآن</button>
+  </div>
+</div>
 <script src="script.js"></script>
 
 </body>
