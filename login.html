@@ -1,29 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قِنوان | تسجيل الدخول</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <div class="auth-container">
-        <div class="auth-box">
-            <h1>Welcome Back</h1>
-            <p>Sign in to your Qinwan account</p>
-            <form id="loginForm">
-                <label>Email</label>
-                <input type="email" placeholder="you@example.com" required>
+  <div class="auth-container">
+    <div class="auth-box">
 
-                <label>Password</label>
-                <input type="password" placeholder="••••••••" required>
+      <div class="auth-logo">
+        <img class="auth-logo-img" src="logo.png" alt="قِنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="auth-logo-fallback" style="display:none">ق</div>
+      </div>
 
-                <button type="submit" class="auth-btn">Sign In</button>
-            </form>
-            <div class="auth-link">Don't have an account? <a href="register.html">Sign up</a></div>
-        </div>
+      <h1>مرحباً بعودتك</h1>
+      <p>سجّل دخولك إلى حسابك في قِنوان</p>
+
+      <div class="auth-ornament">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line" style="transform:scaleX(-1)"></div>
+      </div>
+
+      <form id="loginForm">
+
+        <!-- email في جدول User -->
+        <label>البريد الإلكتروني</label>
+        <input type="email" placeholder="example@email.com" required />
+
+        <!-- password_hash في جدول User -->
+        <label>كلمة المرور</label>
+        <input type="password" placeholder="••••••••" required />
+
+        <button type="submit" class="auth-btn">تسجيل الدخول</button>
+      </form>
+
+      <div class="auth-link">
+        ليس لديك حساب؟ <a href="register.html">إنشاء حساب</a>
+      </div>
+
     </div>
-	    <script src="script.js"></script>
+  </div>
 
+  <script src="script.js"></script>
 </body>
 </html>

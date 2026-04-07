@@ -1,11 +1,91 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Investor Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Investor Dashboard</h1>
-    <a href="index.html">Back to Home</a>
+    <header>
+        <nav class="navbar">
+            <h1 class="logo">Qinwan</h1>
+            <ul class="nav-links">
+                <li><a href="browse-farms.html">Browse Farms</a></li>
+                <li><a href="wishlist.html">Wishlist</a></li>
+                <li><a href="cart.html">Cart</a></li>
+                <li><a href="investment-requests.html">Investment Requests</a></li>
+                <li><a href="index.html">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main style="padding:60px 70px;">
+        <h1 style="font-family:'Playfair Display',serif;font-size:56px;color:#6E5242;margin-bottom:40px;">Investor Dashboard</h1>
+
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:60px;">
+            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Total Invested</p>
+                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;margin-bottom:10px;">SAR 50,000</h3>
+                <p style="font-size:16px;color:#8A6F5A;">Across 3 farms</p>
+            </div>
+            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Active Investments</p>
+                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;">2</h3>
+            </div>
+            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Pending Requests</p>
+                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;">1</h3>
+            </div>
+            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Wishlist Items</p>
+                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;">4</h3>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:30px;align-items:start;">
+            <section>
+                <h2 style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:#6E5242;margin-bottom:24px;">Your Investments</h2>
+                <table style="width:100%;background:#ffffff;border:1px solid #d8c9b7;border-radius:18px;overflow:hidden;border-collapse:separate;border-spacing:0;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
+                    <tr style="background:#faf7f2;color:#6E5242;">
+                        <th style="padding:22px;text-align:left;font-family:'Playfair Display',serif;font-size:20px;">Farm</th>
+                        <th style="font-family:'Playfair Display',serif;font-size:20px;">Amount</th>
+                        <th style="font-family:'Playfair Display',serif;font-size:20px;">Status</th>
+                        <th style="font-family:'Playfair Display',serif;font-size:20px;">Date</th>
+                    </tr>
+                    <tr style="border-top:1px solid #e8ddd0;">
+                        <td style="padding:24px 18px;font-size:18px;color:#6E5242;">Al-Ahsa Heritage Farm</td>
+                        <td style="font-size:18px;color:#8A6F5A;">SAR 25,000</td>
+                        <td><span style="background:#e3eadf;color:#4f7f49;padding:8px 14px;border-radius:10px;font-weight:600;">Active</span></td>
+                        <td style="font-size:18px;color:#8A6F5A;">Jan 2026</td>
+                    </tr>
+                    <tr style="border-top:1px solid #e8ddd0;">
+                        <td style="padding:24px 18px;font-size:18px;color:#6E5242;">Madinah Royal Palms</td>
+                        <td style="font-size:18px;color:#8A6F5A;">SAR 15,000</td>
+                        <td><span style="background:#e3eadf;color:#4f7f49;padding:8px 14px;border-radius:10px;font-weight:600;">Active</span></td>
+                        <td style="font-size:18px;color:#8A6F5A;">Feb 2026</td>
+                    </tr>
+                    <tr style="border-top:1px solid #e8ddd0;">
+                        <td style="padding:24px 18px;font-size:18px;color:#6E5242;">Qassim Green Estate</td>
+                        <td style="font-size:18px;color:#8A6F5A;">SAR 10,000</td>
+                        <td><span style="background:#e7d8bf;color:#7b5c2e;padding:8px 14px;border-radius:10px;font-weight:600;">Pending</span></td>
+                        <td style="font-size:18px;color:#8A6F5A;">Mar 2026</td>
+                    </tr>
+                </table>
+            </section>
+
+            <section>
+                <h2 style="font-family:'Playfair Display',serif;font-size:38px;margin-bottom:20px;">Recent Updates</h2>
+                <div class="card" style="margin-bottom:18px;">
+                    <h3>Al-Ahsa Heritage Farm</h3>
+                    <p>Harvest season update: Khalas dates are ripening on schedule.</p>
+                </div>
+                <div class="card">
+                    <h3>Madinah Royal Palms</h3>
+                    <p>New irrigation system installed, expected 15% yield increase.</p>
+                </div>
+            </section>
+        </div>
+    </main>
 </body>
 </html>
