@@ -1,91 +1,513 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investor Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قِنوان | المستثمر</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <h1 class="logo">Qinwan</h1>
-            <ul class="nav-links">
-                <li><a href="browse-farms.html">Browse Farms</a></li>
-                <li><a href="wishlist.html">Wishlist</a></li>
-                <li><a href="cart.html">Cart</a></li>
-                <li><a href="investment-requests.html">Investment Requests</a></li>
-                <li><a href="index.html">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main style="padding:60px 70px;">
-        <h1 style="font-family:'Playfair Display',serif;font-size:56px;color:#6E5242;margin-bottom:40px;">Investor Dashboard</h1>
+<!-- SVG sprites — أيقونات الأزرار ونخلة الهيدر -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-send" viewBox="0 0 20 20">
+    <path d="M2 10L18 3 11 18 9 12 2 10Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-plus" viewBox="0 0 20 20">
+    <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-upload" viewBox="0 0 32 32">
+    <path d="M16 22V10M16 10l-5 5M16 10l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 24h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </symbol>
+  <symbol id="icon-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="9" cy="21" r="1"/>
+    <circle cx="20" cy="21" r="1"/>
+    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+  </symbol>
+  <symbol id="icon-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+  </symbol>
+  <symbol id="icon-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <circle cx="11" cy="11" r="8"/>
+    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+  </symbol>
+  <symbol id="palm" viewBox="0 0 40 50">
+    <rect x="17" y="26" width="6" height="22" rx="3" fill="currentColor" opacity="0.5"/>
+    <path d="M20 26 Q20 10 20 3" stroke="currentColor" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <path d="M20 20 Q30 12 38 8 Q30 18 22 23" fill="currentColor"/>
+    <path d="M20 20 Q10 12 2 8 Q10 18 18 23" fill="currentColor"/>
+    <path d="M20 22 Q32 18 36 14 Q28 21 21 24" fill="currentColor"/>
+    <path d="M20 22 Q8 18 4 14 Q12 21 19 24" fill="currentColor"/>
+  </symbol>
+</svg>
 
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-bottom:60px;">
-            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Total Invested</p>
-                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;margin-bottom:10px;">SAR 50,000</h3>
-                <p style="font-size:16px;color:#8A6F5A;">Across 3 farms</p>
+<!-- ============================================================
+     صفحة 1 — لوحة تحكم المستثمر
+     ============================================================ -->
+<div class="page active" id="page-dashboard">
+  <nav>
+    <button class="nav-back" onclick="history.back()">العودة للرئيسية</button>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="showPage('dashboard')">لوحة التحكم</button>
+      <button class="nav-link" onclick="showPage('browse')">استكشاف المزارع</button>
+      <button class="nav-link" onclick="showPage('wishlist')">قائمة الرغبات</button>
+      <button class="nav-link" onclick="showPage('cart')">سلة الاستثمار</button>
+      <button class="nav-link" onclick="showPage('requests')">طلباتي</button>
+    </div>
+    <div class="nav-logo" onclick="showPage('dashboard')">
+      <img class="logo-img" src="logo.png" alt="قِنوان"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="logo-fallback" style="display:none">ق</div>
+      <div>
+        <span class="logo-name">قِنوان</span>
+        <span class="logo-sub">المستثمر</span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-title-wrap">
+      <h1 class="page-title">لوحة تحكم المستثمر</h1>
+      <div class="title-ornament">
+        <div class="orn-line" style="width:60px"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-dot"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-line" style="width:24px"></div>
+      </div>
+    </div>
+
+    <!-- إحصائيات — بيانات من جداول Investment وTransaction -->
+    <div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">إجمالي الاستثمار</div>
+    <div class="stat-value">٥٠,٠٠٠ ر.س</div>
+    <div class="stat-sub">موزعة على ٣ مزارع</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">الاستثمارات النشطة</div>
+    <div class="stat-value">٣</div>
+    <div class="stat-sub">جارية حالياً</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">الطلبات المعلقة</div>
+    <div class="stat-value">٢</div>
+    <div class="stat-sub">قيد المراجعة</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">قائمة الرغبات</div>
+    <div class="stat-value">٤</div>
+    <div class="stat-sub">مزارع محفوظة</div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-label">العائد المتوقع</div>
+    <div class="stat-value">٨,٥٠٠ ر.س</div>
+    <div class="stat-sub">أرباح متوقعة من الاستثمارات</div>
+  </div>
+</div>
+
+    <div class="two-columns">
+      <!-- استثماراتي -->
+      <div class="section-card">
+        <div class="section-title">استثماراتي الحالية</div>
+        <div class="investment-list">
+          <div class="investment-item">
+            <div class="investment-info">
+              <div class="investment-name">مزرعة الأحساء التراثية</div>
+              <div class="investment-meta">٢٥,٠٠٠ ر.س · تم الاستثمار: يناير ٢٠٢٦</div>
             </div>
-            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Active Investments</p>
-                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;">2</h3>
+            <span class="status-badge status-active">نشط</span>
+          </div>
+          <div class="investment-item">
+            <div class="investment-info">
+              <div class="investment-name">نخيل المدينة الملكية</div>
+              <div class="investment-meta">١٥,٠٠٠ ر.س · تم الاستثمار: فبراير ٢٠٢٦</div>
             </div>
-            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Pending Requests</p>
-                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;">1</h3>
+            <span class="status-badge status-active">نشط</span>
+          </div>
+          <div class="investment-item">
+            <div class="investment-info">
+              <div class="investment-name">مزرعة القصيم الخضراء</div>
+              <div class="investment-meta">١٠,٠٠٠ ر.س · تم الاستثمار: مارس ٢٠٢٦</div>
             </div>
-            <div style="background:#fff;border:1px solid #d8c9b7;border-radius:18px;padding:34px 32px;min-height:170px;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                <p style="font-size:18px;color:#8A6F5A;margin-bottom:18px;">Wishlist Items</p>
-                <h3 style="font-family:'Playfair Display',serif;font-size:30px;color:#6E5242;">4</h3>
-            </div>
+            <span class="status-badge status-pending">قيد الانتظار</span>
+          </div>
         </div>
+      </div>
 
-        <div style="display:grid;grid-template-columns:2fr 1fr;gap:30px;align-items:start;">
-            <section>
-                <h2 style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:#6E5242;margin-bottom:24px;">Your Investments</h2>
-                <table style="width:100%;background:#ffffff;border:1px solid #d8c9b7;border-radius:18px;overflow:hidden;border-collapse:separate;border-spacing:0;box-shadow:0 4px 10px rgba(0,0,0,0.03);">
-                    <tr style="background:#faf7f2;color:#6E5242;">
-                        <th style="padding:22px;text-align:left;font-family:'Playfair Display',serif;font-size:20px;">Farm</th>
-                        <th style="font-family:'Playfair Display',serif;font-size:20px;">Amount</th>
-                        <th style="font-family:'Playfair Display',serif;font-size:20px;">Status</th>
-                        <th style="font-family:'Playfair Display',serif;font-size:20px;">Date</th>
-                    </tr>
-                    <tr style="border-top:1px solid #e8ddd0;">
-                        <td style="padding:24px 18px;font-size:18px;color:#6E5242;">Al-Ahsa Heritage Farm</td>
-                        <td style="font-size:18px;color:#8A6F5A;">SAR 25,000</td>
-                        <td><span style="background:#e3eadf;color:#4f7f49;padding:8px 14px;border-radius:10px;font-weight:600;">Active</span></td>
-                        <td style="font-size:18px;color:#8A6F5A;">Jan 2026</td>
-                    </tr>
-                    <tr style="border-top:1px solid #e8ddd0;">
-                        <td style="padding:24px 18px;font-size:18px;color:#6E5242;">Madinah Royal Palms</td>
-                        <td style="font-size:18px;color:#8A6F5A;">SAR 15,000</td>
-                        <td><span style="background:#e3eadf;color:#4f7f49;padding:8px 14px;border-radius:10px;font-weight:600;">Active</span></td>
-                        <td style="font-size:18px;color:#8A6F5A;">Feb 2026</td>
-                    </tr>
-                    <tr style="border-top:1px solid #e8ddd0;">
-                        <td style="padding:24px 18px;font-size:18px;color:#6E5242;">Qassim Green Estate</td>
-                        <td style="font-size:18px;color:#8A6F5A;">SAR 10,000</td>
-                        <td><span style="background:#e7d8bf;color:#7b5c2e;padding:8px 14px;border-radius:10px;font-weight:600;">Pending</span></td>
-                        <td style="font-size:18px;color:#8A6F5A;">Mar 2026</td>
-                    </tr>
-                </table>
-            </section>
-
-            <section>
-                <h2 style="font-family:'Playfair Display',serif;font-size:38px;margin-bottom:20px;">Recent Updates</h2>
-                <div class="card" style="margin-bottom:18px;">
-                    <h3>Al-Ahsa Heritage Farm</h3>
-                    <p>Harvest season update: Khalas dates are ripening on schedule.</p>
-                </div>
-                <div class="card">
-                    <h3>Madinah Royal Palms</h3>
-                    <p>New irrigation system installed, expected 15% yield increase.</p>
-                </div>
-            </section>
+      <!-- آخر التحديثات -->
+      <div class="section-card">
+        <div class="section-title">آخر التحديثات</div>
+        <div class="updates-list">
+          <div class="update-item">
+            <div class="update-farm">مزرعة الأحساء التراثية</div>
+            <p class="update-text">اقتراب موسم الحصاد — تمور الخلاص تنضج في الموعد المحدد.</p>
+            <div class="update-date">منذ ٣ أيام</div>
+          </div>
+          <div class="update-item">
+            <div class="update-farm">نخيل المدينة الملكية</div>
+            <p class="update-text">تم تركيب نظام ري جديد، من المتوقع زيادة الإنتاج بنسبة ١٥٪.</p>
+            <div class="update-date">منذ أسبوع</div>
+          </div>
         </div>
-    </main>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     صفحة 2 — استكشاف المزارع
+     ============================================================ -->
+<div class="page" id="page-browse">
+  <nav>
+    <button class="nav-back" onclick="history.back()">العودة للرئيسية</button>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('dashboard')">لوحة التحكم</button>
+      <button class="nav-link active" onclick="showPage('browse')">استكشاف المزارع</button>
+      <button class="nav-link" onclick="showPage('wishlist')">قائمة الرغبات</button>
+      <button class="nav-link" onclick="showPage('cart')">سلة الاستثمار</button>
+      <button class="nav-link" onclick="showPage('requests')">طلباتي</button>
+    </div>
+    <div class="nav-logo" onclick="showPage('dashboard')">
+      <img class="logo-img" src="logo.png" alt="قِنوان"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="logo-fallback" style="display:none">ق</div>
+      <div><span class="logo-name">قِنوان</span><span class="logo-sub">المستثمر</span></div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-title-wrap">
+      <h1 class="page-title">استكشاف المزارع</h1>
+      <div class="title-ornament">
+        <div class="orn-line" style="width:60px"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-line" style="width:24px"></div>
+      </div>
+    </div>
+
+    <!-- شريط البحث والفلترة -->
+    <div class="search-bar">
+      <div class="search-input-wrapper">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8A6F5A" stroke-width="2">
+          <use href="#icon-search"/>
+        </svg>
+        <input type="text" class="search-input" id="farmSearch" placeholder="ابحث عن مزرعة..." onkeyup="filterFarms()">
+      </div>
+      <select class="filter-select" id="regionFilter" onchange="filterFarms()">
+        <option value="all">جميع المناطق</option>
+        <option value="الرياض">الرياض</option>
+        <option value="القصيم">القصيم</option>
+        <option value="المدينة">المدينة المنورة</option>
+        <option value="الأحساء">الأحساء</option>
+      </select>
+    </div>
+
+    <!-- قائمة المزارع -->
+    <div id="farms-list">
+      <div class="farm-card" data-name="مزرعة النخيل العقيلي" data-region="القصيم">
+        <div class="farm-card-inner">
+          <div class="palm-icon">
+            <svg width="28" height="32" viewBox="0 0 40 50" fill="#4f7f49">
+              <use href="#palm"/>
+            </svg>
+          </div>
+          <div class="farm-details">
+            <div class="farm-name">مزرعة  العقيلي</div>
+             <div class="stars">
+              ★★★★★
+              </div>
+            <div class="farm-meta">القصيم · سكري</div>
+           
+            <div class="farm-price">سعر المتر: ٢٥ ر.س/م²</div>
+          </div>
+          <div class="farm-actions">
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'مزرعة العقيلي', 'القصيم', '٢٥')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'مزرعة العقيلي',
+    'القصيم',
+    'سكري',
+    '٣,٠٠٠ م²',
+    '٢,٠٠٠ م²',
+    '١٢,٠٠٠ كجم',
+    '٢٥ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('مزرعة العقيلي', 25)">استثمر الآن</button>
+</div>
+        </div>
+      </div>
+
+      <div class="farm-card" data-name="واحة العجوة المباركة" data-region="المدينة">
+        <div class="farm-card-inner">
+          <div class="palm-icon">
+            <svg width="28" height="32" viewBox="0 0 40 50" fill="#8A6F5A">
+              <use href="#palm"/>
+            </svg>
+          </div>
+          <div class="farm-details">
+            <div class="farm-name">واحة العجوة المباركة</div>
+            <div class="stars">
+              ★★★☆
+              </div>
+            <div class="farm-meta">المدينة المنورة · عجوة</div>
+            <div class="farm-price">سعر المتر: ٣٠ ر.س/م²</div>
+          </div>
+          <div class="farm-actions">
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'واحة العجوة المباركة', 'المدينة', '٣٠')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'واحة العجوة المباركة',
+    'images/farm-ajwa.jpg',
+    'المدينة المنورة',
+    'عجوة',
+    '٢,٥٠٠ م²',
+    '١,٥٠٠ م²',
+    '٨,٠٠٠ كجم',
+    '٣٠ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('واحة العجوة المباركة', 30)">استثمر الآن</button>
+</div>
+        </div>
+      </div>
+
+      <div class="farm-card" data-name="مزارع الخلاص الأصيلة" data-region="القصيم">
+        <div class="farm-card-inner">
+          <div class="palm-icon">
+            <svg width="28" height="32" viewBox="0 0 40 50" fill="#C8922A">
+              <use href="#palm"/>
+            </svg>
+          </div>
+          <div class="farm-details">
+            <div class="farm-name">مزارع الخلاص الأصيلة</div>
+            <div class="stars">
+              ★★★☆☆
+              </div>
+            <div class="farm-meta">القصيم · خلاص</div>
+            <div class="farm-price">سعر المتر: ٢٠ ر.س/م²</div>
+          </div>
+          <div class="farm-actions">
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'مزارع الخلاص الأصيلة', 'القصيم', '٢٠')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'مزارع الخلاص الأصيلة',
+    'images/farm-khalas.jpg',
+    'القصيم',
+    'خلاص',
+    '٤,٠٠٠ م²',
+    '٣,٠٠٠ م²',
+    '٢٠,٠٠٠ كجم',
+    '٢٠ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('مزارع الخلاص الأصيلة', 20)">استثمر الآن</button>
+</div>
+        </div>
+      </div>
+
+      <div class="farm-card" data-name="نخيل البرحي الفاخر" data-region="الأحساء">
+        <div class="farm-card-inner">
+          <div class="palm-icon">
+            <svg width="28" height="32" viewBox="0 0 40 50" fill="#6E5242">
+              <use href="#palm"/>
+            </svg>
+          </div>
+          <div class="farm-details">
+            <div class="farm-name">نخيل البرحي الفاخر</div>
+            <div class="stars">
+              ★★★☆☆
+              </div>
+            <div class="farm-meta">الأحساء · برحي</div>
+            <div class="farm-price">سعر المتر: ٢٢ ر.س/م²</div>
+          </div>
+          <div class="farm-actions">
+  <button class="icon-btn wishlist-btn" onclick="toggleWishlist(this, 'نخيل البرحي الفاخر', 'الأحساء', '٢٢')">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <use href="#icon-heart"/>
+    </svg>
+  </button>
+
+  <button class="btn-explore" onclick="openFarmPopup(
+    'نخيل البرحي الفاخر',
+    'images/farm-barhi.jpg',
+    'الأحساء',
+    'برحي',
+    '٣,٢٠٠ م²',
+    '٢,٥٠٠ م²',
+    '١٥,٠٠٠ كجم',
+    '٢٢ ر.س/م²'
+  )">استكشف المزرعة</button>
+
+  <button class="btn-invest" onclick="addToCart('نخيل البرحي الفاخر', 22)">استثمر الآن</button>
+</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     صفحة 3 — قائمة الرغبات
+     ============================================================ -->
+<div class="page" id="page-wishlist">
+  <nav>
+    <button class="nav-back" onclick="history.back()">العودة للرئيسية</button>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('dashboard')">لوحة التحكم</button>
+      <button class="nav-link" onclick="showPage('browse')">استكشاف المزارع</button>
+      <button class="nav-link active" onclick="showPage('wishlist')">قائمة الرغبات</button>
+      <button class="nav-link" onclick="showPage('cart')">سلة الاستثمار</button>
+      <button class="nav-link" onclick="showPage('requests')">طلباتي</button>
+    </div>
+    <div class="nav-logo" onclick="showPage('dashboard')">
+      <img class="logo-img" src="logo.png" alt="قِنوان"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="logo-fallback" style="display:none">ق</div>
+      <div><span class="logo-name">قِنوان</span><span class="logo-sub">المستثمر</span></div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-title-wrap">
+      <h1 class="page-title">قائمة الرغبات</h1>
+      <div class="title-ornament">
+        <div class="orn-line" style="width:60px"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-dot"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-line" style="width:24px"></div>
+      </div>
+    </div>
+
+    <div id="wishlist-container" class="wishlist-container"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     صفحة 4 — سلة الاستثمار
+     ============================================================ -->
+<div class="page" id="page-cart">
+  <nav>
+    <button class="nav-back" onclick="history.back()">العودة للرئيسية</button>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('dashboard')">لوحة التحكم</button>
+      <button class="nav-link" onclick="showPage('browse')">استكشاف المزارع</button>
+      <button class="nav-link" onclick="showPage('wishlist')">قائمة الرغبات</button>
+      <button class="nav-link active" onclick="showPage('cart')">سلة الاستثمار</button>
+      <button class="nav-link" onclick="showPage('requests')">طلباتي</button>
+    </div>
+    <div class="nav-logo" onclick="showPage('dashboard')">
+      <img class="logo-img" src="logo.png" alt="قِنوان"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="logo-fallback" style="display:none">ق</div>
+      <div><span class="logo-name">قِنوان</span><span class="logo-sub">المستثمر</span></div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-title-wrap">
+      <h1 class="page-title">سلة الاستثمار</h1>
+      <div class="title-ornament">
+        <div class="orn-line" style="width:60px"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-line" style="width:24px"></div>
+      </div>
+    </div>
+
+    <div id="cart-container"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     صفحة 5 — طلباتي
+     ============================================================ -->
+<div class="page" id="page-requests">
+  <nav>
+    <button class="nav-back" onclick="history.back()">العودة للرئيسية</button>
+    <div class="nav-links">
+      <button class="nav-link" onclick="showPage('dashboard')">لوحة التحكم</button>
+      <button class="nav-link" onclick="showPage('browse')">استكشاف المزارع</button>
+      <button class="nav-link" onclick="showPage('wishlist')">قائمة الرغبات</button>
+      <button class="nav-link" onclick="showPage('cart')">سلة الاستثمار</button>
+      <button class="nav-link active" onclick="showPage('requests')">طلباتي</button>
+    </div>
+    <div class="nav-logo" onclick="showPage('dashboard')">
+      <img class="logo-img" src="logo.png" alt="قِنوان"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+      <div class="logo-fallback" style="display:none">ق</div>
+      <div><span class="logo-name">قِنوان</span><span class="logo-sub">المستثمر</span></div>
+    </div>
+  </nav>
+
+  <div class="page-content">
+    <div class="page-title-wrap">
+      <h1 class="page-title">طلبات الاستثمار</h1>
+      <div class="title-ornament">
+        <div class="orn-line" style="width:60px"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-dot"></div>
+        <div class="orn-diamond"></div>
+        <div class="orn-line" style="width:24px"></div>
+      </div>
+    </div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterInvestorRequests('all',this)">الكل</button>
+      <button class="filter-btn" onclick="filterInvestorRequests('pending',this)">قيد الانتظار</button>
+      <button class="filter-btn" onclick="filterInvestorRequests('accepted',this)">مقبولة</button>
+      <button class="filter-btn" onclick="filterInvestorRequests('rejected',this)">مرفوضة</button>
+    </div>
+
+    <div id="investor-requests-list"></div>
+  </div>
+</div>
+
+<!-- Toast إشعار -->
+<div class="toast" id="toast"></div>
+<div id="farmPopup" class="farm-popup-overlay">
+  <div class="farm-popup-card">
+    <button class="farm-popup-close" onclick="closeFarmPopup()">×</button>
+
+    <img id="popupFarmImage" class="farm-popup-image" src="" alt="صورة المزرعة">
+
+<h2 id="popupFarmName" class="farm-popup-title farm-name-green"></h2>
+
+<div class="farm-popup-details farm-details-red">
+    <div class="farm-popup-details">
+      <p><strong>المنطقة:</strong> <span id="popupFarmRegion"></span></p>
+      <p><strong>نوع التمر:</strong> <span id="popupFarmType"></span></p>
+      <p><strong>المساحة الكلية:</strong> <span id="popupFarmTotalArea"></span></p>
+      <p><strong>المساحة المتاحة:</strong> <span id="popupFarmAvailableArea"></span></p>
+      <p><strong>الإنتاج الموسمي:</strong> <span id="popupFarmProduction"></span></p>
+      <p><strong>سعر المتر:</strong> <span id="popupFarmPrice"></span></p>
+    </div>
+
+    <button id="popupInvestBtn" class="btn-invest">استثمر الآن</button>
+  </div>
+</div>
+<script src="script.js"></script>
+
 </body>
 </html>
