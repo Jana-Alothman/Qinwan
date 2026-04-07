@@ -481,6 +481,29 @@ function exportStatisticsCSV() {
     a.click();
     URL.revokeObjectURL(url);
 }
+function exportStatisticsPDF() {
+    const users = getUsers();
+    const farms = getFarms();
+    const transactions = getTransactions();
+
+    const totalUsers = users.length;
+    const activeFarms = farms.filter(f => f.status === "Approved").length;
+
+    const reportWindow = window.open("", "_blank");
+
+    reportWindow.document.write(`
+        <html>
+        <body style="direction:rtl; font-family:Arial; padding:20px">
+            <h2>تقرير الإحصائيات</h2>
+            <p>إجمالي المستخدمين: ${totalUsers}</p>
+            <p>المزارع النشطة: ${activeFarms}</p>
+        </body>
+        </html>
+    `);
+
+    reportWindow.document.close();
+    reportWindow.print();
+}
 /* =========================
    USERS
 ========================= */
@@ -973,12 +996,29 @@ function renderActivityLogs() {
     const tbody = document.getElementById("activityLogsTableBody");
     if (!tbody) return;
 
-    const search = (document.getElementById("logSearchInput")?.value || "").toLowerCase();
+    const search = (document.getElementById("logSearchInput")?.value || "").toLowerCase().trim();
+    const fromDate = document.getElementById("logDateFrom")?.value || "";
+    const toDate = document.getElementById("logDateTo")?.value || "";
 
-    let logs = getLogs().filter(log =>
-        log.userName.toLowerCase().includes(search) ||
-        log.actionType.toLowerCase().includes(search)
-    );
+    if (fromDate && toDate && fromDate > toDate) {
+        tbody.innerHTML = `<tr><td colspan="5">تاريخ البداية يجب أن يكون قبل تاريخ النهاية.</td></tr>`;
+        return;
+    }
+
+    let logs = getLogs();
+
+    logs = logs.filter(log => {
+        const matchesSearch =
+            log.userName.toLowerCase().includes(search) ||
+            log.actionType.toLowerCase().includes(search);
+
+        const logDate = formatLogDateForFilter(log.timestamp);
+
+        const matchesFrom = !fromDate || logDate >= fromDate;
+        const matchesTo = !toDate || logDate <= toDate;
+
+        return matchesSearch && matchesFrom && matchesTo;
+    });
 
     if (logs.length === 0) {
         tbody.innerHTML = `<tr><td colspan="5">لا توجد سجلات مطابقة.</td></tr>`;
@@ -994,6 +1034,19 @@ function renderActivityLogs() {
             <td>${log.timestamp}</td>
         </tr>
     `).join("");
+}
+
+function formatLogDateForFilter(timestamp) {
+    if (!timestamp) return "";
+
+    const match = timestamp.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if (!match) return "";
+
+    const day = match[1].padStart(2, "0");
+    const month = match[2].padStart(2, "0");
+    const year = match[3];
+
+    return `${year}-${month}-${day}`;
 }
 
 /* =========================
@@ -1192,4 +1245,9 @@ window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("transactionStatusFilter")?.addEventListener("change", renderTransactionsMonitor);
 document.getElementById("transactionDateFrom")?.addEventListener("change", renderTransactionsMonitor);
 document.getElementById("transactionDateTo")?.addEventListener("change", renderTransactionsMonitor);
+document.getElementById("logSearchInput")?.addEventListener("input", renderActivityLogs);
+document.getElementById("logDateFrom")?.addEventListener("change", renderActivityLogs);
+document.getElementById("logDateTo")?.addEventListener("change", renderActivityLogs);
+document.getElementById("logDateFrom")?.addEventListener("input", renderActivityLogs);
+document.getElementById("logDateTo")?.addEventListener("input", renderActivityLogs);
 });
