@@ -562,3 +562,43 @@ window.addEventListener("click", function (e) {
     closeFarmPopup();
   }
 });
+let currentFarm = {};
+
+// فتح صفحة التعديل
+function openEditFarm(farm){
+  currentFarm = farm;
+
+  document.getElementById("edit-name").value = farm.name;
+  document.getElementById("edit-region").value = farm.region;
+  document.getElementById("edit-palm").value = farm.palm;
+  document.getElementById("edit-production").value = farm.production;
+
+  showPage('edit-farm');
+}
+
+// حفظ التعديل
+function saveEdit(){
+  currentFarm.name = document.getElementById("edit-name").value;
+  currentFarm.region = document.getElementById("edit-region").value;
+  currentFarm.palm = document.getElementById("edit-palm").value;
+  currentFarm.production = document.getElementById("edit-production").value;
+
+  alert("تم حفظ التعديلات ✅");
+  showPage('dashboard');
+}
+
+// الرجوع بدون حفظ
+function cancelEdit(){
+  showPage('dashboard');
+}
+
+// فتح صفحة التعديل
+function openEditFarm(){
+  showPage('edit-farm');
+}
+
+// التنقل بين الصفحات
+function showPage(page){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+page).classList.add("active");
+}
