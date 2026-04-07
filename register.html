@@ -1,38 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>قِنوان | إنشاء حساب</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
-    <div class="auth-container">
-        <div class="auth-box">
-            <h1>Create Your Account</h1>
-            <p>Join Qinwan as an investor, farm owner, or admin</p>
-            <form id="registerForm">
-                <label>Full Name</label>
-                <input type="text" placeholder="Your full name" required>
+  <div class="auth-container">
+    <div class="auth-box" style="max-width:460px;">
 
-                <label>Email</label>
-                <input type="email" placeholder="you@example.com" required>
+      <!-- اللوقو — الاسم موجود في الصورة، لا يوجد نص إضافي -->
+      <div class="auth-logo">
+        <img class="auth-logo-img" src="logo.png" alt="قِنوان"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+        <div class="auth-logo-fallback" style="display:none">ق</div>
+      </div>
 
-                <label>Password</label>
-                <input type="password" placeholder="••••••••" required>
+      <h1>إنشاء حساب جديد</h1>
+      <p>انضم إلى قِنوان كمستثمر أو مزارع</p>
 
-                <label>I am a</label>
-                <div class="role-buttons">
-                    <button type="button" class="role-btn active">Investor</button>
-                    <button type="button" class="role-btn">Farm Owner</button>
-                    <button type="button" class="role-btn">Admin</button>
-                </div>
+      <div class="auth-ornament">
+        <div class="line"></div>
+        <div class="diamond"></div>
+        <div class="line" style="transform:scaleX(-1)"></div>
+      </div>
 
-                <button type="button" id="createAccountBtn" class="auth-btn">Create Account</button>
-            </form>
-            <div class="auth-link">Already have an account? <a href="login.html">Sign in</a></div>
+      <form id="registerForm">
+
+        <!-- full_name في جدول User -->
+        <label>الاسم الكامل</label>
+        <input type="text" placeholder="أدخل اسمك الكامل" required />
+
+        <!-- email في جدول User -->
+        <label>البريد الإلكتروني</label>
+        <input type="email" placeholder="example@email.com" required />
+
+        <!-- password_hash في جدول User -->
+        <label>كلمة المرور</label>
+        <input type="password" placeholder="••••••••" required />
+
+        <!-- role في جدول User -->
+        <div class="role-label">أنا</div>
+        <div class="role-buttons">
+          <button type="button" class="role-btn active">مستثمر</button>
+          <button type="button" class="role-btn">مزارع</button>
         </div>
+
+        <button type="button" id="createAccountBtn" class="auth-btn">إنشاء الحساب</button>
+      </form>
+
+      <div class="auth-link">
+        لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a>
+      </div>
+
     </div>
-    <script src="script.js"></script>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
