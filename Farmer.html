@@ -95,29 +95,62 @@
     <div class="section-title">مزارعي</div>
 
     <!-- بطاقة مزرعة — بيانات من جدول Farm -->
-    <div class="farm-card">
-      <div class="farm-stats">
-        <div class="farm-stat">
-          <div class="farm-stat-label">المتاح</div>
-          <div class="farm-stat-value">2,000 م²</div>
-        </div>
-        <div class="farm-stat">
-          <div class="farm-stat-label">الإنتاج</div>
-          <div class="farm-stat-value">12,000 كجم</div>
-        </div>
-      </div>
+   <div class="farm-card">
       <div style="display:flex; align-items:center; gap:16px;">
+        
         <div class="farm-info">
-          <div class="farm-name">مزرعة النخيل الذهبية</div>
+          <!-- ✅ هذا هو التعديل الوحيد -->
+          <div class="farm-name" onclick="openEditFarm()" style="cursor:pointer;">
+            مزرعة النخيل الذهبية
+          </div>
+
           <div class="farm-meta">الرياض · سكري</div>
         </div>
-        <div class="palm-icon">
-          <svg width="28" height="32" viewBox="0 0 40 50" fill="#4f7f49">
-            <use href="#palm"/>
-          </svg>
-        </div>
+
       </div>
     </div>
+
+  </div>
+</div>
+ 
+<div class="page" id="page-edit-farm">
+
+  <nav>
+    <button class="nav-back" onclick="showPage('dashboard')">رجوع</button>
+  </nav>
+
+  <div class="page-content">
+
+    <h1 class="page-title">تعديل المزرعة</h1>
+
+    <div class="form-card">
+
+      <div class="form-group">
+        <label class="form-label">اسم المزرعة</label>
+        <input type="text" class="form-input" placeholder="اسم المزرعة" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">المنطقة</label>
+        <input type="text" class="form-input" placeholder="المنطقة" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">نوع النخيل</label>
+        <input type="text" class="form-input" placeholder="نوع النخيل" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">تغيير الصورة</label>
+        <input type="file" />
+      </div>
+
+      <button class="btn-primary" onclick="showPage('dashboard')">
+        حفظ
+      </button>
+
+    </div>
+
   </div>
 </div>
 
