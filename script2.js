@@ -35,8 +35,8 @@ function initializeAdminDemoData() {
                 registrationDate: "2025-03-14",
                 status: "Active",
                 verified: true,
-                nationalId: "مرفوع",
-                ownershipDocuments: "مرفوعة"
+                nationalId: "1029384756",
+                ownershipDocuments: "files/farm-ownership-abdullah.pdf"
             },
             {
                 id: "u4",
@@ -46,8 +46,8 @@ function initializeAdminDemoData() {
                 registrationDate: "2025-03-16",
                 status: "Active",
                 verified: true,
-                nationalId: "مرفوع",
-                ownershipDocuments: "مرفوعة"
+                nationalId: "1038475621",
+                ownershipDocuments: "files/farm-ownership-mohammed.pdf"
             },
             {
                 id: "u5",
@@ -57,8 +57,8 @@ function initializeAdminDemoData() {
                 registrationDate: "2025-03-20",
                 status: "Pending Verification",
                 verified: false,
-                nationalId: "مرفوع",
-                ownershipDocuments: "مرفوعة"
+                nationalId: "1047568392",
+                ownershipDocuments: "files/farm-ownership-faisal.pdf"
             },
             {
                 id: "u6",
@@ -78,6 +78,7 @@ function initializeAdminDemoData() {
                 status: "Active",
                 verified: false
             }
+            
         ];
         localStorage.setItem("qinwan_registered_users", JSON.stringify(registeredUsers));
     }
@@ -403,6 +404,7 @@ function getStatusBadge(status) {
         "Under Investigation": "قيد التحقيق",
         "Dismissed": "مرفوضة",
         "Flagged": "مخالفة",
+        "More Info Requested": "مطلوب معلومات إضافية",
         "Clean": "سليم"
     };
 
@@ -479,26 +481,28 @@ function exportStatisticsCSV() {
     a.click();
     URL.revokeObjectURL(url);
 }
-
 /* =========================
    USERS
 ========================= */
+
+function getRoleLabel(role) {
+    if (role === "Investor") return "مستثمر";
+    if (role === "Farm Owner") return "مزارع";
+    return "مدير";
+}
 
 function renderUsersManagement() {
     const tbody = document.getElementById("usersManagementTableBody");
     if (!tbody) return;
 
-    const search = (document.getElementById("userSearchInput")?.value || "").toLowerCase();
+    const search = (document.getElementById("userSearchInput")?.value || "").toLowerCase().trim();
     const roleFilter = document.getElementById("userRoleFilter")?.value || "all";
     const statusFilter = document.getElementById("userStatusFilter")?.value || "all";
 
-    let users = getUsers();
+    let users = getUsers().filter(user => user.role !== "Admin");
 
     users = users.filter(user => {
-        const matchesSearch =
-            user.name.toLowerCase().includes(search) ||
-            user.email.toLowerCase().includes(search);
-
+        const matchesSearch = user.name.toLowerCase().includes(search); // البحث بالاسم فقط
         const matchesRole = roleFilter === "all" || user.role === roleFilter;
         const matchesStatus = statusFilter === "all" || user.status === statusFilter;
 
@@ -506,24 +510,18 @@ function renderUsersManagement() {
     });
 
     if (users.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7">لا يوجد مستخدمون مطابقون.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5">لا يوجد مستخدمون مطابقون.</td></tr>`;
         return;
     }
 
     tbody.innerHTML = users.map(user => `
         <tr>
             <td>${user.name}</td>
-            <td>${user.role === "Investor" ? "مستثمر" : user.role === "Farm Owner" ? "مزارع" : "مدير"}</td>
-            <td>${user.email}</td>
+            <td>${getRoleLabel(user.role)}</td>
             <td>${user.registrationDate}</td>
             <td>${getStatusBadge(user.status)}</td>
-            <td>${user.verified ? '<span class="verified-badge">موثق</span>' : '<span class="not-verified-badge">غير موثق</span>'}</td>
             <td>
-                <button class="admin-action-btn btn-secondary" onclick="viewUserProfile('${user.id}')">عرض</button>
-                ${user.role === 'Farm Owner' && user.status === 'Pending Verification' ? `
-                    <button class="admin-action-btn btn-approve" onclick="approveFarmerAccount('${user.id}')">قبول</button>
-                    <button class="admin-action-btn btn-reject" onclick="rejectFarmerAccount('${user.id}')">رفض</button>
-                ` : ''}
+                <button class="admin-action-btn btn-secondary" onclick="viewUserProfile('${user.id}')">عرض الملف</button>
             </td>
         </tr>
     `).join("");
@@ -531,206 +529,358 @@ function renderUsersManagement() {
 
 function viewUserProfile(userId) {
     const user = getUsers().find(u => u.id === userId);
+    const farms = getFarms();
+    const transactions = getTransactions();
+    const complaints = getComplaints();
+    const logs = getLogs();
+
     if (!user) return;
 
-    alert(
-        `الاسم: ${user.name}\nالدور: ${user.role}\nالبريد: ${user.email}\nتاريخ التسجيل: ${user.registrationDate}\nالحالة: ${user.status}`
-    );
-}
+    const profileSection = document.getElementById("selectedUserProfileSection");
+    const profileContent = document.getElementById("selectedUserProfileContent");
 
-function approveFarmerAccount(userId) {
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    if (!user) return;
+    let relatedFarms = [];
+    let relatedTransactions = [];
+    let relatedComplaints = [];
+    let relatedLogs = [];
 
-    user.status = "Active";
-    user.verified = true;
-    saveUsers(users);
-    addLog("اعتماد حساب مزارع", user.email);
-    alert("تم اعتماد حساب المزارع ويمكنه الآن إضافة المزارع.");
-    renderUsersManagement();
-}
+    if (user.role === "Farm Owner") {
+        relatedFarms = farms.filter(farm => farm.ownerId === user.id);
+        relatedTransactions = transactions.filter(tx => tx.farmerId === user.id);
+        relatedComplaints = complaints.filter(c => {
+            return relatedTransactions.some(tx => tx.id === c.relatedTransactionId);
+        });
+        relatedLogs = logs.filter(log => log.userId === user.id);
+    } else if (user.role === "Investor") {
+        relatedTransactions = transactions.filter(tx => tx.investorId === user.id);
+        relatedFarms = farms.filter(farm => {
+            return relatedTransactions.some(tx => tx.farmId === farm.id);
+        });
+        relatedComplaints = complaints.filter(c => c.submitterId === user.id);
+        relatedLogs = logs.filter(log => log.userId === user.id);
+    }
 
-function rejectFarmerAccount(userId) {
-    const note = prompt("أدخلي سبب الرفض الإجباري:");
-    if (!note) return;
+    profileContent.innerHTML = `
+        <div class="admin-record-card user-profile-main-card">
+            <h3>الملف الشخصي للمستخدم</h3>
+            <div class="user-profile-grid">
+                <div class="user-info-box">
+                    <span class="info-label">الاسم</span>
+                    <span class="info-value">${user.name}</span>
+                </div>
+                <div class="user-info-box">
+                    <span class="info-label">الدور</span>
+                    <span class="info-value">${getRoleLabel(user.role)}</span>
+                </div>
+                <div class="user-info-box">
+                    <span class="info-label">البريد الإلكتروني</span>
+                    <span class="info-value">${user.email}</span>
+                </div>
+                <div class="user-info-box">
+                    <span class="info-label">تاريخ التسجيل</span>
+                    <span class="info-value">${user.registrationDate}</span>
+                </div>
+                <div class="user-info-box">
+                    <span class="info-label">الحالة</span>
+                    <span class="info-value">${getStatusBadge(user.status)}</span>
+                </div>
+                <div class="user-info-box">
+                    <span class="info-label">عدد السجلات المرتبطة</span>
+                    <span class="info-value">${relatedFarms.length + relatedTransactions.length + relatedComplaints.length + relatedLogs.length}</span>
+                </div>
+            </div>
+        </div>
 
-    const users = getUsers();
-    const user = users.find(u => u.id === userId);
-    if (!user) return;
+        <div class="admin-record-card user-profile-main-card">
+            <h3>النشاط</h3>
+            <div class="activity-summary-grid">
+                <div class="activity-mini-card">
+                    <span class="activity-number">${relatedFarms.length}</span>
+                    <span class="activity-label">${user.role === "Farm Owner" ? "مزارع مسجلة" : "مزارع مرتبطة بالاستثمار"}</span>
+                </div>
+                <div class="activity-mini-card">
+                    <span class="activity-number">${relatedTransactions.length}</span>
+                    <span class="activity-label">المعاملات</span>
+                </div>
+                <div class="activity-mini-card">
+                    <span class="activity-number">${relatedComplaints.length}</span>
+                    <span class="activity-label">الشكاوى</span>
+                </div>
+                <div class="activity-mini-card">
+                    <span class="activity-number">${relatedLogs.length}</span>
+                    <span class="activity-label">سجلات النشاط</span>
+                </div>
+            </div>
+        </div>
 
-    user.status = "Suspended";
-    user.verified = false;
-    user.rejectionNote = note;
-    saveUsers(users);
-    addLog("رفض حساب مزارع", `${user.email} - ${note}`);
-    alert("تم رفض حساب المزارع مع حفظ سبب الرفض.");
-    renderUsersManagement();
+        <div class="details-section-title">بطاقات المزارع المرتبطة بالمستخدم</div>
+        <div class="admin-cards-list">
+            ${
+                relatedFarms.length > 0
+                    ? relatedFarms.map(farm => `
+                        <div class="admin-record-card farm-details-card">
+                            <h3>${farm.farmName}</h3>
+                            <p><strong>رقم المزرعة:</strong> ${farm.id}</p>
+                            <p><strong>اسم المالك:</strong> ${farm.ownerName}</p>
+                            <p><strong>البريد الإلكتروني للمالك:</strong> ${farm.ownerEmail}</p>
+                            <p><strong>الموقع:</strong> ${farm.location}</p>
+                            <p><strong>المساحة:</strong> ${farm.area} م²</p>
+                            <p><strong>نوع النخل:</strong> ${farm.palmType}</p>
+                            <p><strong>عدد الصور:</strong> ${farm.photos}</p>
+                            <p><strong>الحالة:</strong> ${getStatusBadge(farm.status)}</p>
+                            <p><strong>الوصف:</strong> ${farm.description}</p>
+                        </div>
+                    `).join("")
+                    : `<div class="admin-record-card"><p>لا توجد مزارع مرتبطة بهذا المستخدم.</p></div>`
+            }
+        </div>
+
+        <div class="details-section-title">آخر المعاملات المرتبطة</div>
+        <div class="admin-cards-list">
+            ${
+                relatedTransactions.length > 0
+                    ? relatedTransactions.map(tx => `
+                        <div class="admin-record-card">
+                            <h3>${tx.farmName}</h3>
+                            <p><strong>رقم المعاملة:</strong> ${tx.id}</p>
+                            <p><strong>المستثمر:</strong> ${tx.investorName}</p>
+                            <p><strong>المزارع:</strong> ${tx.farmerName}</p>
+                            <p><strong>المساحة:</strong> ${tx.area} م²</p>
+                            <p><strong>المدة:</strong> ${tx.duration}</p>
+                            <p><strong>طريقة الحصاد:</strong> ${tx.harvestMethod}</p>
+                            <p><strong>الحالة:</strong> ${getStatusBadge(tx.status)}</p>
+                            <p><strong>التاريخ:</strong> ${tx.date}</p>
+                        </div>
+                    `).join("")
+                    : `<div class="admin-record-card"><p>لا توجد معاملات مرتبطة بهذا المستخدم.</p></div>`
+            }
+        </div>
+
+        <div class="details-section-title">سجل النشاط</div>
+        <div class="admin-cards-list">
+            ${
+                relatedLogs.length > 0
+                    ? relatedLogs.map(log => `
+                        <div class="admin-record-card">
+                            <h3>${log.actionType}</h3>
+                            <p><strong>الكيان المرتبط:</strong> ${log.entity}</p>
+                            <p><strong>التاريخ والوقت:</strong> ${log.timestamp}</p>
+                        </div>
+                    `).join("")
+                    : `<div class="admin-record-card"><p>لا توجد سجلات نشاط لهذا المستخدم.</p></div>`
+            }
+        </div>
+    `;
+
+    profileSection.style.display = "block";
+    profileSection.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 /* =========================
    FARMS
 ========================= */
+/* =========================
+   FARM REGISTRATION REVIEW
+========================= */
 
 function renderFarmsManagement() {
-    const tbody = document.getElementById("farmsManagementTableBody");
-    if (!tbody) return;
+    const container = document.getElementById("farmRequestsContainer");
+    if (!container) return;
 
-    const search = (document.getElementById("farmSearchInput")?.value || "").toLowerCase();
-    const statusFilter = document.getElementById("farmStatusFilter")?.value || "all";
+    const search = (document.getElementById("farmSearchInput")?.value || "").toLowerCase().trim();
 
-    let farms = getFarms();
-
-    farms = farms.filter(farm => {
-        const matchesSearch =
+    let farms = getFarms().filter(farm =>
+        farm.status === "Pending" &&
+        (
             farm.farmName.toLowerCase().includes(search) ||
-            farm.ownerName.toLowerCase().includes(search);
-
-        const matchesStatus = statusFilter === "all" || farm.status === statusFilter;
-        return matchesSearch && matchesStatus;
-    });
+            farm.ownerName.toLowerCase().includes(search)
+        )
+    );
 
     if (farms.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7">لا توجد مزارع مطابقة.</td></tr>`;
+        container.innerHTML = `
+            <div class="admin-record-card">
+                <h3>لا توجد طلبات تسجيل معلّقة</h3>
+                <p>لا توجد حاليًا طلبات مزارع بانتظار المراجعة.</p>
+            </div>
+        `;
         return;
     }
 
-    tbody.innerHTML = farms.map(farm => `
-        <tr>
-            <td>${farm.farmName}</td>
-            <td>${farm.ownerName}</td>
-            <td>${farm.location}</td>
-            <td>${farm.area}</td>
-            <td>${farm.palmType}</td>
-            <td>${getStatusBadge(farm.status)}</td>
-            <td>
-                <button class="admin-action-btn btn-secondary" onclick="viewFarmDetails('${farm.id}')">عرض</button>
-                <button class="admin-action-btn btn-approve" onclick="approveFarm('${farm.id}')">اعتماد</button>
-                <button class="admin-action-btn btn-reject" onclick="rejectFarm('${farm.id}')">رفض</button>
-                <button class="admin-action-btn btn-primary" onclick="requestAdditionalFarmInfo('${farm.id}')">طلب معلومات</button>
-                <button class="admin-action-btn btn-secondary" onclick="editFarm('${farm.id}')">تعديل</button>
-                <button class="admin-action-btn btn-danger" onclick="deactivateFarm('${farm.id}')">تعطيل</button>
-                <button class="admin-action-btn btn-danger" onclick="deleteFarm('${farm.id}')">حذف</button>
-            </td>
-        </tr>
+    container.innerHTML = farms.map(farm => `
+        <div class="admin-record-card farm-details-card">
+            <h3>${farm.farmName}</h3>
+
+            <p><strong>اسم المالك:</strong> ${farm.ownerName}</p>
+            <p><strong>الموقع:</strong> ${farm.location}</p>
+            <p><strong>المساحة:</strong> ${farm.area} م²</p>
+            <p><strong>نوع النخل:</strong> ${farm.palmType}</p>
+            <p><strong>عدد الصور:</strong> ${farm.photos ? farm.photos.length || farm.photos : 0}</p>
+            <p><strong>الحالة الحالية:</strong> ${getStatusBadge(farm.status)}</p>
+            <p><strong>الوصف:</strong> ${farm.description}</p>
+
+            <div class="farm-images-preview">
+                ${
+                    Array.isArray(farm.photos) && farm.photos.length > 0
+                        ? farm.photos.map(photo => `
+                            <img src="${photo}" alt="${farm.farmName}" class="farm-preview-image">
+                        `).join("")
+                        : `
+                            <img src="images/farm-placeholder.jpg" alt="صورة افتراضية" class="farm-preview-image">
+                        `
+                }
+            </div>
+
+            <div class="admin-card-actions">
+                <button class="admin-action-btn btn-approve" onclick="approveFarmRequest('${farm.id}')">
+                    اعتماد المزرعة
+                </button>
+
+                <button class="admin-action-btn btn-danger" onclick="rejectFarmRequest('${farm.id}')">
+                    رفض الطلب
+                </button>
+
+                <button class="admin-action-btn btn-secondary" onclick="requestMoreFarmInfo('${farm.id}')">
+                    طلب معلومات إضافية
+                </button>
+            </div>
+        </div>
     `).join("");
 }
-
-function viewFarmDetails(farmId) {
+function viewFarmRequestDetails(farmId) {
     const farm = getFarms().find(f => f.id === farmId);
     if (!farm) return;
 
-    alert(
-        `اسم المزرعة: ${farm.farmName}\nالمالك: ${farm.ownerName}\nالموقع: ${farm.location}\nالمساحة: ${farm.area} م²\nنوع النخل: ${farm.palmType}\nعدد الصور: ${farm.photos}\nالوصف: ${farm.description}\nالحالة: ${farm.status}`
-    );
-}
+    const detailsSection = document.getElementById("selectedFarmRequestSection");
+    const detailsContent = document.getElementById("selectedFarmRequestContent");
 
-function approveFarm(farmId) {
+    if (!detailsSection || !detailsContent) {
+        alert(
+            `اسم المزرعة: ${farm.farmName}\n` +
+            `اسم المالك: ${farm.ownerName}\n` +
+            `الموقع: ${farm.location}\n` +
+            `المساحة: ${farm.area} م²\n` +
+            `نوع النخل: ${farm.palmType}\n` +
+            `عدد الصور: ${farm.photos}\n` +
+            `الحالة: ${farm.status}\n` +
+            `الوصف: ${farm.description}`
+        );
+        return;
+    }
+
+    detailsContent.innerHTML = `
+        <div class="admin-record-card farm-details-card">
+            <h3>${farm.farmName}</h3>
+            <p><strong>رقم الطلب:</strong> ${farm.id}</p>
+            <p><strong>اسم المالك:</strong> ${farm.ownerName}</p>
+            <p><strong>البريد الإلكتروني:</strong> ${farm.ownerEmail}</p>
+            <p><strong>الموقع:</strong> ${farm.location}</p>
+            <p><strong>المساحة:</strong> ${farm.area} م²</p>
+            <p><strong>نوع النخل:</strong> ${farm.palmType}</p>
+            <p><strong>عدد الصور:</strong> ${farm.photos}</p>
+            <p><strong>الحالة الحالية:</strong> ${getStatusBadge(farm.status)}</p>
+            <p><strong>الوصف:</strong> ${farm.description}</p>
+
+            <div class="admin-card-actions">
+                <button class="admin-action-btn btn-approve" onclick="approveFarmRequest('${farm.id}')">اعتماد المزرعة</button>
+                <button class="admin-action-btn btn-danger" onclick="rejectFarmRequest('${farm.id}')">رفض الطلب</button>
+                <button class="admin-action-btn btn-secondary" onclick="requestMoreFarmInfo('${farm.id}')">طلب معلومات إضافية</button>
+            </div>
+        </div>
+    `;
+
+    detailsSection.style.display = "block";
+    detailsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function approveFarmRequest(farmId) {
     const farms = getFarms();
     const farm = farms.find(f => f.id === farmId);
     if (!farm) return;
 
     farm.status = "Approved";
+    farm.visibleToInvestors = true;
+
     saveFarms(farms);
-    addLog("اعتماد مزرعة", farm.farmName);
-    alert("تم اعتماد المزرعة وأصبحت ظاهرة للمستثمرين.");
+
+    addLog("اعتماد طلب مزرعة", `${farm.farmName} - admin1`);
+
+    alert("تم اعتماد المزرعة، وأصبحت ظاهرة للمستثمرين في الخريطة والقائمة.");
     renderFarmsManagement();
 }
+function rejectFarmRequest(farmId) {
+    const reason = prompt("أدخل سبب الرفض الإجباري:");
 
-function rejectFarm(farmId) {
-    const reason = prompt("أدخلي سبب الرفض الإجباري:");
-    if (!reason) return;
+    if (!reason || !reason.trim()) {
+        alert("يجب كتابة سبب الرفض قبل رفض الطلب.");
+        return;
+    }
 
     const farms = getFarms();
     const farm = farms.find(f => f.id === farmId);
     if (!farm) return;
 
     farm.status = "Rejected";
-    farm.rejectionReason = reason;
+    farm.visibleToInvestors = false;
+    farm.rejectionReason = reason.trim();
+
     saveFarms(farms);
-    addLog("رفض مزرعة", `${farm.farmName} - ${reason}`);
-    alert("تم رفض المزرعة مع إرسال سبب الرفض.");
+
+    addLog("رفض طلب مزرعة", `${farm.farmName} - admin1 - ${reason.trim()}`);
+
+    alert("تم رفض طلب المزرعة وإرسال سبب الرفض للمزارع.");
     renderFarmsManagement();
 }
 
-function requestAdditionalFarmInfo(farmId) {
-    const note = prompt("أدخلي المعلومات الإضافية المطلوبة:");
-    if (!note) return;
+function requestMoreFarmInfo(farmId) {
+    const note = prompt("اكتب المعلومات الإضافية المطلوبة من المزارع:");
+
+    if (!note || !note.trim()) {
+        alert("يجب كتابة المعلومات المطلوبة قبل الإرسال.");
+        return;
+    }
 
     const farms = getFarms();
     const farm = farms.find(f => f.id === farmId);
     if (!farm) return;
 
-    farm.additionalInfoRequest = note;
+    farm.status = "More Info Requested";
+    farm.visibleToInvestors = false;
+    farm.additionalInfoRequest = note.trim();
+
     saveFarms(farms);
-    addLog("طلب معلومات إضافية للمزرعة", `${farm.farmName} - ${note}`);
+
+    addLog("طلب معلومات إضافية لمزرعة", `${farm.farmName} - admin1 - ${note.trim()}`);
+
     alert("تم إرسال طلب معلومات إضافية إلى المزارع.");
-}
-
-function editFarm(farmId) {
-    const farms = getFarms();
-    const farm = farms.find(f => f.id === farmId);
-    if (!farm) return;
-
-    const newName = prompt("عدلي اسم المزرعة:", farm.farmName);
-    if (!newName) return;
-
-    farm.farmName = newName;
-    saveFarms(farms);
-    addLog("تعديل مزرعة", farm.id);
-    alert("تم تعديل المزرعة بنجاح.");
     renderFarmsManagement();
 }
-
-function deactivateFarm(farmId) {
-    const reason = prompt("أدخلي سبب التعطيل الإجباري:");
-    if (!reason) return;
-
-    const farms = getFarms();
-    const farm = farms.find(f => f.id === farmId);
-    if (!farm) return;
-
-    farm.status = "Deactivated";
-    farm.deactivationReason = reason;
-    saveFarms(farms);
-    addLog("تعطيل مزرعة", `${farm.farmName} - ${reason}`);
-    alert("تم تعطيل المزرعة مع إشعار المزارع.");
-    renderFarmsManagement();
-}
-
-function deleteFarm(farmId) {
-    const reason = prompt("أدخلي سبب الحذف الإجباري:");
-    if (!reason) return;
-
-    let farms = getFarms();
-    const farm = farms.find(f => f.id === farmId);
-    if (!farm) return;
-
-    farms = farms.filter(f => f.id !== farmId);
-    saveFarms(farms);
-    addLog("حذف مزرعة", `${farm.farmName} - ${reason}`);
-    alert("تم حذف المزرعة مع إشعار المزارع.");
-    renderFarmsManagement();
-}
-
 /* =========================
    TRANSACTIONS
 ========================= */
-
 function renderTransactionsMonitor() {
     const tbody = document.getElementById("transactionsTableBody");
     if (!tbody) return;
 
     const statusFilter = document.getElementById("transactionStatusFilter")?.value || "all";
-    const dateFilter = document.getElementById("transactionDateFilter")?.value || "";
+    const fromDate = document.getElementById("transactionDateFrom")?.value || "";
+    const toDate = document.getElementById("transactionDateTo")?.value || "";
 
     let transactions = getTransactions();
 
-    transactions = transactions.filter(tx => {
-        const matchesStatus = statusFilter === "all" || tx.status === statusFilter;
-        const matchesDate = !dateFilter || tx.date === dateFilter;
-        return matchesStatus && matchesDate;
-    });
+   transactions = transactions.filter(tx => {
+    const matchesStatus = statusFilter === "all" || tx.status === statusFilter;
+
+    if (!fromDate && !toDate) return matchesStatus;
+
+    const txTime = new Date(tx.date).getTime();
+    const fromTime = fromDate ? new Date(fromDate).getTime() : null;
+    const toTime = toDate ? new Date(toDate).getTime() : null;
+
+    const matchesFrom = !fromTime || txTime >= fromTime;
+    const matchesTo = !toTime || txTime <= toTime;
+
+    return matchesStatus && matchesFrom && matchesTo;
+});
 
     if (transactions.length === 0) {
         tbody.innerHTML = `<tr><td colspan="10">لا توجد معاملات مطابقة.</td></tr>`;
@@ -738,7 +888,7 @@ function renderTransactionsMonitor() {
     }
 
     tbody.innerHTML = transactions.map(tx => `
-        <tr>
+        <tr class="${tx.suspicious ? 'suspicious-row' : ''}">
             <td>${tx.investorName}</td>
             <td>${tx.farmerName}</td>
             <td>${tx.farmName}</td>
@@ -747,10 +897,26 @@ function renderTransactionsMonitor() {
             <td>${tx.harvestMethod}</td>
             <td>${getStatusBadge(tx.status)}</td>
             <td>${tx.date}</td>
-            <td><button class="admin-action-btn btn-secondary" onclick="viewTransactionDetails('${tx.id}')">عرض</button></td>
-            <td>${tx.suspicious ? '<span class="flag-badge">مشبوهة</span>' : '<span class="normal-badge">طبيعية</span>'}</td>
+            <td>
+                <button class="admin-action-btn btn-secondary" onclick="viewTransactionDetails('${tx.id}')">
+                    عرض
+                </button>
+            </td>
+            <td>
+                ${tx.suspicious
+                    ? '<span class="flag-badge">مشبوهة</span>'
+                    : '<span class="normal-badge">طبيعية</span>'}
+            </td>
         </tr>
     `).join("");
+
+    const suspiciousTransactions = transactions.filter(tx => tx.suspicious);
+
+    if (suspiciousTransactions.length > 0) {
+        setTimeout(() => {
+            alert(`تنبيه: يوجد ${suspiciousTransactions.length} معاملة مشبوهة ضمن النتائج المعروضة.`);
+        }, 200);
+    }
 }
 
 function viewTransactionDetails(txId) {
@@ -884,11 +1050,131 @@ function deleteViolatingUpdate(updateId) {
     alert("تم حذف التحديث المخالف مع تسجيل السبب.");
     renderContentModeration();
 }
+/* =========================
+   FARMER VERIFICATION
+========================= */
+
+function getNotifications() {
+    return JSON.parse(localStorage.getItem("qinwan_notifications")) || [];
+}
+
+function saveNotifications(notifications) {
+    localStorage.setItem("qinwan_notifications", JSON.stringify(notifications));
+}
+
+function addNotification(userId, message, type = "system") {
+    const notifications = getNotifications();
+    notifications.unshift({
+        id: "N" + Date.now(),
+        userId: userId,
+        message: message,
+        type: type,
+        date: new Date().toLocaleString("ar-SA"),
+        isRead: false
+    });
+    saveNotifications(notifications);
+}
+
+function renderFarmerVerificationQueue() {
+    const container = document.getElementById("verificationCardsContainer");
+    if (!container) return;
+
+    const search = (document.getElementById("verificationSearchInput")?.value || "").trim().toLowerCase();
+
+    const pendingFarmers = getUsers().filter(user =>
+        user.role === "Farm Owner" &&
+        user.status === "Pending Verification" &&
+        user.name.toLowerCase().includes(search)
+    );
+
+    if (pendingFarmers.length === 0) {
+        container.innerHTML = `
+            <div class="admin-record-card">
+                <h3>لا توجد طلبات توثيق حالياً</h3>
+                <p>جميع طلبات توثيق المزارعين تمت معالجتها أو لا توجد طلبات جديدة.</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = pendingFarmers.map(user => `
+        <div class="admin-record-card verification-card">
+            <h3>${user.name}</h3>
+
+            <p><strong>البريد الإلكتروني:</strong> ${user.email}</p>
+            <p><strong>تاريخ التسجيل:</strong> ${user.registrationDate}</p>
+            <p><strong>الحالة الحالية:</strong> ${getStatusBadge(user.status)}</p>
+
+            <div class="verification-documents">
+                <div class="verification-doc-box">
+                    <h4>رقم الهوية الوطنية</h4>
+                    <p class="national-id-number">${user.nationalId ? user.nationalId : "غير متوفر"}</p>
+                </div>
+
+                <div class="verification-doc-box">
+                    <h4>مستندات ملكية المزرعة</h4>
+                    ${
+                        user.ownershipDocuments
+                            ? `
+                                <a href="${user.ownershipDocuments}" target="_blank" class="admin-action-btn btn-secondary">
+                                    فتح ملف PDF
+                                </a>
+                                <iframe src="${user.ownershipDocuments}" class="ownership-pdf-frame"></iframe>
+                              `
+                            : `<p>لا يوجد ملف مرفوع</p>`
+                    }
+                </div>
+            </div>
+
+            <div class="admin-card-actions">
+                <button class="admin-action-btn btn-approve" onclick="approveFarmerVerification('${user.id}')">
+                    اعتماد الحساب
+                </button>
+                <button class="admin-action-btn btn-reject" onclick="rejectFarmerVerification('${user.id}')">
+                    رفض الحساب
+                </button>
+            </div>
+        </div>
+    `).join("");
+}
+
+function approveFarmerVerification(userId) {
+    const users = getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+
+    user.status = "Active";
+    user.verified = true;
+    user.canListFarms = true;
+
+    saveUsers(users);
+    alert("تم اعتماد الحساب");
+    renderFarmerVerificationQueue();
+}
+
+function rejectFarmerVerification(userId) {
+    const note = prompt("أدخلي سبب الرفض:");
+
+    if (!note || !note.trim()) {
+        alert("يجب كتابة سبب الرفض");
+        return;
+    }
+
+    const users = getUsers();
+    const user = users.find(u => u.id === userId);
+    if (!user) return;
+
+    user.status = "Suspended";
+    user.rejectionNote = note;
+
+    saveUsers(users);
+    alert("تم رفض الحساب");
+    renderFarmerVerificationQueue();
+}
 
 /* =========================
    INIT
 ========================= */
-
 window.addEventListener("DOMContentLoaded", () => {
     initializeAdminDemoData();
 
@@ -899,16 +1185,11 @@ window.addEventListener("DOMContentLoaded", () => {
     renderComplaintsQueue();
     renderActivityLogs();
     renderContentModeration();
-
-    document.getElementById("userSearchInput")?.addEventListener("input", renderUsersManagement);
-    document.getElementById("userRoleFilter")?.addEventListener("change", renderUsersManagement);
-    document.getElementById("userStatusFilter")?.addEventListener("change", renderUsersManagement);
+    renderFarmerVerificationQueue();
 
     document.getElementById("farmSearchInput")?.addEventListener("input", renderFarmsManagement);
     document.getElementById("farmStatusFilter")?.addEventListener("change", renderFarmsManagement);
-
     document.getElementById("transactionStatusFilter")?.addEventListener("change", renderTransactionsMonitor);
-    document.getElementById("transactionDateFilter")?.addEventListener("change", renderTransactionsMonitor);
-
-    document.getElementById("logSearchInput")?.addEventListener("input", renderActivityLogs);
+document.getElementById("transactionDateFrom")?.addEventListener("change", renderTransactionsMonitor);
+document.getElementById("transactionDateTo")?.addEventListener("change", renderTransactionsMonitor);
 });

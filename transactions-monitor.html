@@ -30,16 +30,18 @@
         <p>عرض جميع المعاملات الاستثمارية والتحقق من سلامتها المالية.</p>
     </section>
 
-    <section class="admin-toolbar">
-        <select id="transactionStatusFilter">
-            <option value="all">جميع الحالات</option>
-            <option value="Pending">قيد المراجعة</option>
-            <option value="Accepted">مقبولة</option>
-            <option value="Rejected">مرفوضة</option>
-            <option value="Completed">مكتملة</option>
-        </select>
-        <input type="date" id="transactionDateFilter">
-    </section>
+   <section class="admin-toolbar">
+    <select id="transactionStatusFilter">
+        <option value="all">كل الحالات</option>
+        <option value="Pending">قيد المراجعة</option>
+        <option value="Accepted">مقبولة</option>
+        <option value="Rejected">مرفوضة</option>
+        <option value="Completed">مكتملة</option>
+    </select>
+
+    <input type="date" id="transactionDateFrom" placeholder="من تاريخ">
+    <input type="date" id="transactionDateTo" placeholder="إلى تاريخ">
+</section>
 
     <section class="admin-table-wrapper">
         <table class="admin-table">

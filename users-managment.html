@@ -1,67 +1,65 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>إدارة المستخدمين - قنوان</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
-
 </head>
 <body>
 
 <header>
     <nav class="navbar">
-        <h1 class="logo">Qinwan</h1>
+        <h1 class="logo">قنوان</h1>
         <ul class="nav-links">
-            <li><a href="index.html">تصفح المزارع</a></li>
-            <li><a href="investor.html">المستثمر</a></li>
-            <li><a href="farmer.html">المزارع</a></li>
-            <li><a href="admin.html" class="active-admin-link">الإدارة</a></li>
-            <li><a href="login.html">تسجيل الدخول</a></li>
-            <li><a href="register.html" class="btn">ابدأ الآن</a></li>
+            <li><a href="admin.html" class="active-admin-link">لوحة التحكم</a></li>
         </ul>
     </nav>
 </header>
 
-<main class="admin-page admin-rtl">
+<main class="admin-page">
+
     <section class="admin-heading">
         <h2>إدارة المستخدمين</h2>
-        <p>عرض المستخدمين المسجلين والبحث عنهم وتوثيق حسابات المزارعين.</p>
+        <p>عرض جميع المستثمرين والمزارعين، مع إمكانية البحث بالاسم والتصفية حسب الدور أو الحالة.</p>
     </section>
 
+    <!-- البحث والفلاتر -->
     <section class="admin-toolbar">
-        <input type="text" id="userSearchInput" placeholder="ابحث بالاسم أو البريد الإلكتروني">
+
+        <input type="text" id="userSearchInput" placeholder="ابحث باسم المستخدم">
+
         <select id="userRoleFilter">
-            <option value="all">جميع الأدوار</option>
+            <option value="all">كل الأدوار</option>
             <option value="Investor">مستثمر</option>
             <option value="Farm Owner">مزارع</option>
-            <option value="Admin">مدير</option>
         </select>
+
         <select id="userStatusFilter">
-            <option value="all">جميع الحالات</option>
+            <option value="all">كل الحالات</option>
             <option value="Active">نشط</option>
-            <option value="Pending Verification">بانتظار التوثيق</option>
             <option value="Suspended">موقوف</option>
         </select>
+
     </section>
 
+    <!-- الجدول -->
     <section class="admin-table-wrapper">
         <table class="admin-table">
             <thead>
                 <tr>
                     <th>الاسم</th>
                     <th>الدور</th>
-                    <th>البريد الإلكتروني</th>
                     <th>تاريخ التسجيل</th>
                     <th>الحالة</th>
-                    <th>شارة التوثيق</th>
-                    <th>الإجراءات</th>
+                    <th>عرض الملف</th>
                 </tr>
             </thead>
             <tbody id="usersManagementTableBody"></tbody>
         </table>
     </section>
+
 </main>
 
 <script src="script2.js"></script>
