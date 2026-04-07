@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة المزارع - قنوان</title>
+    <title>إدارة المستخدمين - قنوان</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style2.css">
 
@@ -26,18 +26,23 @@
 
 <main class="admin-page admin-rtl">
     <section class="admin-heading">
-        <h2>إدارة المزارع</h2>
-        <p>مراجعة المزارع واعتمادها وتعديلها وتعطيلها أو حذفها.</p>
+        <h2>إدارة المستخدمين</h2>
+        <p>عرض المستخدمين المسجلين والبحث عنهم وتوثيق حسابات المزارعين.</p>
     </section>
 
     <section class="admin-toolbar">
-        <input type="text" id="farmSearchInput" placeholder="ابحث باسم المزرعة أو اسم المالك">
-        <select id="farmStatusFilter">
+        <input type="text" id="userSearchInput" placeholder="ابحث بالاسم أو البريد الإلكتروني">
+        <select id="userRoleFilter">
+            <option value="all">جميع الأدوار</option>
+            <option value="Investor">مستثمر</option>
+            <option value="Farm Owner">مزارع</option>
+            <option value="Admin">مدير</option>
+        </select>
+        <select id="userStatusFilter">
             <option value="all">جميع الحالات</option>
-            <option value="Pending">قيد المراجعة</option>
-            <option value="Approved">معتمدة</option>
-            <option value="Rejected">مرفوضة</option>
-            <option value="Deactivated">معطلة</option>
+            <option value="Active">نشط</option>
+            <option value="Pending Verification">بانتظار التوثيق</option>
+            <option value="Suspended">موقوف</option>
         </select>
     </section>
 
@@ -45,16 +50,16 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th>اسم المزرعة</th>
-                    <th>اسم المالك</th>
-                    <th>الموقع</th>
-                    <th>المساحة (م²)</th>
-                    <th>نوع النخل</th>
+                    <th>الاسم</th>
+                    <th>الدور</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>تاريخ التسجيل</th>
                     <th>الحالة</th>
+                    <th>شارة التوثيق</th>
                     <th>الإجراءات</th>
                 </tr>
             </thead>
-            <tbody id="farmsManagementTableBody"></tbody>
+            <tbody id="usersManagementTableBody"></tbody>
         </table>
     </section>
 </main>

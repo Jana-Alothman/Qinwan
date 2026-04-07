@@ -1,93 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Qinwan</title>
+    <title>لوحة الإدارة - قنوان</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style2.css">
+
 </head>
 <body>
 
-    <header>
-        <nav class="navbar">
-            <h1 class="logo">Qinwan</h1>
-            <ul class="nav-links">
-                <li><a href="index.html">Browse Farms</a></li>
-                <li><a href="investor.html">Investor</a></li>
-                <li><a href="farmer.html">Farmer</a></li>
-                <li><a href="admin.html" class="active-admin-link">Admin</a></li>
-                <li><a href="login.html">Sign In</a></li>
-                <li><a href="register.html" class="btn">Get Started</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+    <nav class="navbar">
+        <h1 class="logo">Qinwan</h1>
+        <ul class="nav-links">
+            <li><a href="index.html">تصفح المزارع</a></li>
+            <li><a href="investor.html">المستثمر</a></li>
+            <li><a href="farmer.html">المزارع</a></li>
+            <li><a href="admin.html" class="active-admin-link">الإدارة</a></li>
+            <li><a href="login.html">تسجيل الدخول</a></li>
+            <li><a href="register.html" class="btn">ابدأ الآن</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <main class="admin-page">
-        <section class="admin-heading">
-            <h2>Platform Statistics</h2>
-            <p>Monitor overall performance and manage all platform operations.</p>
-        </section>
+<main class="admin-page admin-rtl">
+    <section class="admin-heading">
+        <h2>إحصائيات المنصة</h2>
+        <p>متابعة الأداء العام والنمو في منصة قنوان.</p>
+    </section>
 
-        <section class="admin-stats-grid">
-            <div class="admin-stat-card">
-                <h3>Total Farms</h3>
-                <p id="totalFarmsStat">0</p>
-            </div>
+    <section class="admin-stats-grid">
+        <div class="admin-stat-card">
+            <h3>إجمالي المستخدمين</h3>
+            <p id="statTotalUsers">0</p>
+        </div>
 
-            <div class="admin-stat-card">
-                <h3>Total Users</h3>
-                <p id="totalUsersStat">0</p>
-            </div>
+        <div class="admin-stat-card">
+            <h3>إجمالي المزارع النشطة</h3>
+            <p id="statActiveFarms">0</p>
+        </div>
 
-            <div class="admin-stat-card">
-                <h3>Transactions</h3>
-                <p id="totalTransactionsStat">0</p>
-            </div>
+        <div class="admin-stat-card">
+            <h3>إجمالي المساحة المؤجرة</h3>
+            <p id="statLeasedArea">0 م²</p>
+        </div>
 
-            <div class="admin-stat-card">
-                <h3>Leased Area</h3>
-                <p id="leasedAreaStat">0 m²</p>
-            </div>
+        <div class="admin-stat-card">
+            <h3>إجمالي حجم المعاملات</h3>
+            <p id="statTransactionVolume">0 ريال</p>
+        </div>
 
-            <div class="admin-stat-card">
-                <h3>Trading Volume</h3>
-                <p id="tradingVolumeStat">0 SAR</p>
-            </div>
-        </section>
+        <div class="admin-stat-card">
+            <h3>التسجيلات الجديدة هذا الشهر</h3>
+            <p id="statNewRegistrations">0</p>
+        </div>
+    </section>
 
-        <section class="admin-panel-grid">
-            <a href="users-management.html" class="admin-panel-card">
-                <h3>Users Management</h3>
-                <p>View, search, filter, verify, and manage registered users.</p>
-            </a>
+    <section class="admin-chart-card">
+        <div class="admin-chart-header">
+            <h3>التسجيلات الشهرية</h3>
+            <button class="admin-action-btn btn-primary" onclick="exportStatisticsCSV()">تصدير CSV</button>
+        </div>
+        <div class="monthly-bars" id="monthlyBars"></div>
+    </section>
 
-            <a href="farms-management.html" class="admin-panel-card">
-                <h3>Farms Management</h3>
-                <p>Review farm submissions, approve farms, edit listings, and deactivate violations.</p>
-            </a>
+    <section class="admin-panel-grid">
+        <a href="users-management.html" class="admin-panel-card">
+            <h3>إدارة المستخدمين</h3>
+            <p>عرض جميع المستخدمين والبحث والفلترة وتوثيق حسابات المزارعين.</p>
+        </a>
 
-            <a href="transactions-monitor.html" class="admin-panel-card">
-                <h3>Transactions Monitor</h3>
-                <p>Track all investment requests, statuses, suspicious activity, and details.</p>
-            </a>
+        <a href="farms-management.html" class="admin-panel-card">
+            <h3>إدارة المزارع</h3>
+            <p>مراجعة طلبات المزارع، اعتمادها، تعديلها، تعطيلها أو حذفها.</p>
+        </a>
 
-            <a href="complaints-queue.html" class="admin-panel-card">
-                <h3>Complaints Queue</h3>
-                <p>Receive, review, update, and resolve user complaints fairly.</p>
-            </a>
+        <a href="transactions-monitor.html" class="admin-panel-card">
+            <h3>مراقبة المعاملات</h3>
+            <p>عرض جميع المعاملات الاستثمارية ومتابعة حالاتها والتنبيهات المشبوهة.</p>
+        </a>
 
-            <a href="activity-logs.html" class="admin-panel-card">
-                <h3>Activity Logs</h3>
-                <p>Audit important user and system actions with timestamps and affected entities.</p>
-            </a>
+        <a href="complaints-queue.html" class="admin-panel-card">
+            <h3>قائمة الشكاوى</h3>
+            <p>استقبال الشكاوى والتحقيق فيها وتحديث حالتها.</p>
+        </a>
 
-            <a href="content-moderation.html" class="admin-panel-card">
-                <h3>Content Moderation</h3>
-                <p>Remove violating updates and edit minor issues in user-generated content.</p>
-            </a>
-        </section>
-    </main>
+        <a href="activity-logs.html" class="admin-panel-card">
+            <h3>سجل النشاط</h3>
+            <p>تتبع جميع الإجراءات المهمة مع الوقت والكيان المتأثر.</p>
+        </a>
 
-    <script src="script.js"></script>
+        <a href="content-moderation.html" class="admin-panel-card">
+            <h3>إدارة المحتوى</h3>
+            <p>حذف المنشورات المخالفة أو تعديل المخالفات البسيطة دون حذف المنشور كاملًا.</p>
+        </a>
+    </section>
+</main>
+
+<script src="script2.js"></script>
 </body>
 </html>
