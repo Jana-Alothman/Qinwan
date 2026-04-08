@@ -2720,3 +2720,12 @@ nav .logo-name {
     border-color: var(--red);
 }
 
+.verified-badge {
+  background: #2d5f33;
+  color: #F2D998;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  margin-right: 6px;
+  font-weight: 600;
+}
