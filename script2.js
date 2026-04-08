@@ -77,7 +77,18 @@ function initializeAdminDemoData() {
                 registrationDate: "2025-03-01",
                 status: "Active",
                 verified: false
-            }
+            },
+            {
+            id: "u7",
+            name: "سارة العتيبي",
+            role: "Farm Owner",
+            email: "sara@example.com",
+            registrationDate: "2025-04-01",
+            status: "Pending Verification",
+            verified: false,
+            nationalId: "10984521773",
+            ownershipDocuments: "files/sample.pdf"
+        }
             
         ];
         localStorage.setItem("qinwan_registered_users", JSON.stringify(registeredUsers));
@@ -625,68 +636,76 @@ function viewUserProfile(userId) {
 ========================= */
 
 function renderFarmsManagement() {
-    const container = document.getElementById("farmRequestsContainer");
-    if (!container) return;
+    const tbody = document.getElementById("farmsManagementTableBody");
+    if (!tbody) return;
 
-    const search = (document.getElementById("farmSearchInput")?.value || "").toLowerCase().trim();
+    const search = (document.getElementById("farmSearchInput")?.value || "").trim().toLowerCase();
+    const regionFilter = document.getElementById("farmRegionFilter")?.value || "all";
+    const statusFilter = document.getElementById("farmStatusFilter")?.value || "all";
 
-    let farms = getFarms().filter(farm =>
-        farm.status === "Pending" &&
-        (
+    let farms = getFarms();
+
+    farms = farms.filter(farm => {
+        const matchesSearch =
             farm.farmName.toLowerCase().includes(search) ||
-            farm.ownerName.toLowerCase().includes(search)
-        )
-    );
+            farm.ownerName.toLowerCase().includes(search);
+
+        const matchesRegion =
+            regionFilter === "all" || farm.location === regionFilter;
+
+        const matchesStatus =
+            statusFilter === "all" || farm.status === statusFilter;
+
+        return matchesSearch && matchesRegion && matchesStatus;
+    });
 
     if (farms.length === 0) {
-        container.innerHTML = `
-            <div class="admin-record-card">
-                <h3>لا توجد طلبات تسجيل معلّقة</h3>
-                <p>لا توجد حاليًا طلبات مزارع بانتظار المراجعة.</p>
-            </div>
-        `;
+        tbody.innerHTML = `<tr><td colspan="7">لا توجد مزارع مطابقة.</td></tr>`;
         return;
     }
 
-    container.innerHTML = farms.map(farm => `
-        <div class="admin-record-card farm-details-card">
-            <h3>${farm.farmName}</h3>
+    tbody.innerHTML = farms.map(farm => {
+        let actions = "";
+        if (farm.status === "Approved") {
+            actions = `
+                <div class="table-actions">
+                    <button class="admin-action-btn btn-secondary" onclick="viewFarmProfile('${farm.id}')">عرض</button>
+                    <button class="admin-action-btn btn-edit" onclick="openEditFarmModal('${farm.id}')">تعديل</button>
+                    <button class="admin-action-btn btn-warning" onclick="deactivateFarm('${farm.id}')">تعطيل</button>
+                    <button class="admin-action-btn btn-danger" onclick="deleteFarmPermanently('${farm.id}')">حذف</button>
+                </div>
+            `;
+        } else if (farm.status === "Pending") {
+            actions = `
+                <div class="table-actions">
+                    <button class="admin-action-btn btn-approve" onclick="approveFarmRequest('${farm.id}')">اعتماد</button>
+                    <button class="admin-action-btn btn-edit" onclick="openEditFarmModal('${farm.id}')">تعديل</button>
+                    <button class="admin-action-btn btn-danger" onclick="rejectFarmRequest('${farm.id}')">رفض</button>
+                    <button class="admin-action-btn btn-danger" onclick="deleteFarmPermanently('${farm.id}')">حذف</button>
+                </div>
+            `;
+        } else {
+            actions = `
+                <div class="table-actions">
+                    <button class="admin-action-btn btn-secondary" onclick="viewFarmProfile('${farm.id}')">عرض</button>
+                    <button class="admin-action-btn btn-edit" onclick="openEditFarmModal('${farm.id}')">تعديل</button>
+                    <button class="admin-action-btn btn-danger" onclick="deleteFarmPermanently('${farm.id}')">حذف</button>
+                </div>
+            `;
+        }
 
-            <p><strong>اسم المالك:</strong> ${farm.ownerName}</p>
-            <p><strong>الموقع:</strong> ${farm.location}</p>
-            <p><strong>المساحة:</strong> ${farm.area} م²</p>
-            <p><strong>نوع النخل:</strong> ${farm.palmType}</p>
-            <p><strong>عدد الصور:</strong> ${farm.photos ? farm.photos.length || farm.photos : 0}</p>
-            <p><strong>الحالة الحالية:</strong> ${getStatusBadge(farm.status)}</p>
-            <p><strong>الوصف:</strong> ${farm.description}</p>
-
-            <div class="farm-images-preview">
-                ${
-                    Array.isArray(farm.photos) && farm.photos.length > 0
-                        ? farm.photos.map(photo => `
-                            <img src="${photo}" alt="${farm.farmName}" class="farm-preview-image">
-                        `).join("")
-                        : `
-                            <img src="images/farm-placeholder.jpg" alt="صورة افتراضية" class="farm-preview-image">
-                        `
-                }
-            </div>
-
-            <div class="admin-card-actions">
-                <button class="admin-action-btn btn-approve" onclick="approveFarmRequest('${farm.id}')">
-                    اعتماد المزرعة
-                </button>
-
-                <button class="admin-action-btn btn-danger" onclick="rejectFarmRequest('${farm.id}')">
-                    رفض الطلب
-                </button>
-
-                <button class="admin-action-btn btn-secondary" onclick="requestMoreFarmInfo('${farm.id}')">
-                    طلب معلومات إضافية
-                </button>
-            </div>
-        </div>
-    `).join("");
+        return `
+            <tr>
+                <td class="clickable-name" onclick="viewFarmProfile('${farm.id}')">${farm.farmName}</td>
+                <td>${farm.ownerName}</td>
+                <td>${farm.location}</td>
+                <td>${farm.area} م²</td>
+                <td>${farm.palmType}</td>
+                <td>${getStatusBadge(farm.status)}</td>
+                <td>${actions}</td>
+            </tr>
+        `;
+    }).join("");
 }
 function viewFarmRequestDetails(farmId) {
     const farm = getFarms().find(f => f.id === farmId);
@@ -1188,5 +1207,257 @@ window.addEventListener("click", function(event) {
 document.addEventListener("keydown", function(event) {
     if (event.key === "Escape") {
         closeUserModal();
+    }
+});
+
+function deactivateFarm(farmId) {
+    const reason = prompt("أدخلي سبب تعطيل المزرعة:");
+    if (!reason || !reason.trim()) {
+        alert("سبب التعطيل إجباري");
+        return;
+    }
+
+    const farms = getFarms();
+    const farm = farms.find(f => f.id === farmId);
+    if (!farm) return;
+
+    farm.status = "Deactivated";
+    farm.deactivationReason = reason.trim();
+
+    saveFarms(farms);
+
+    notifyUser(
+        farm.ownerId,
+        "تم تعطيل مزرعتك",
+        `تم تعطيل المزرعة ${farm.farmName} من قبل المشرف. السبب: ${reason}`
+    );
+
+    addLog("تعطيل مزرعة", `${farm.farmName} - السبب: ${reason}`);
+
+    renderFarmsManagement();
+    alert("تم تعطيل المزرعة");
+}
+
+function reactivateFarm(farmId) {
+    const farms = getFarms();
+    const farm = farms.find(f => f.id === farmId);
+    if (!farm) return;
+
+    farm.status = "Approved";
+    saveFarms(farms);
+    addLog("إعادة تفعيل مزرعة", farm.farmName);
+    alert("تمت إعادة تفعيل المزرعة.");
+    renderFarmsManagement();
+}
+
+function getFarms() {
+    return JSON.parse(localStorage.getItem("qinwan_farms")) || [];
+}
+
+function saveFarms(farms) {
+    localStorage.setItem("qinwan_farms", JSON.stringify(farms));
+}
+
+function getUsers() {
+    return JSON.parse(localStorage.getItem("qinwan_registered_users")) || [];
+}
+
+function saveUsers(users) {
+    localStorage.setItem("qinwan_registered_users", JSON.stringify(users));
+}
+
+function getLogs() {
+    return JSON.parse(localStorage.getItem("qinwan_activity_logs")) || [];
+}
+
+function saveLogs(logs) {
+    localStorage.setItem("qinwan_activity_logs", JSON.stringify(logs));
+}
+
+function getNotifications() {
+    return JSON.parse(localStorage.getItem("qinwan_notifications")) || [];
+}
+
+function saveNotifications(notifications) {
+    localStorage.setItem("qinwan_notifications", JSON.stringify(notifications));
+}
+
+function getCurrentTimestamp() {
+    return new Date().toLocaleString("en-CA");
+}
+
+function addLog(actionType, entity, userId = "admin1") {
+    const logs = getLogs();
+
+    logs.unshift({
+        id: "LOG" + Date.now(),
+        userId: userId,
+        actionType: actionType,
+        entity: entity,
+        timestamp: getCurrentTimestamp()
+    });
+
+    saveLogs(logs);
+}
+
+function notifyUser(userId, title, message) {
+    const notifications = getNotifications();
+
+    notifications.unshift({
+        id: "N" + Date.now(),
+        userId: userId,
+        title: title,
+        message: message,
+        createdAt: getCurrentTimestamp(),
+        read: false
+    });
+
+    saveNotifications(notifications);
+}
+
+let currentEditingFarmId = null;
+
+function openEditFarmModal(farmId) {
+    const farm = getFarms().find(f => f.id === farmId);
+    if (!farm) return;
+
+    currentEditingFarmId = farmId;
+
+    document.getElementById("editFarmId").value = farm.id;
+    document.getElementById("editFarmName").value = farm.farmName || "";
+    document.getElementById("editFarmDescription").value = farm.description || "";
+    document.getElementById("editFarmArea").value = farm.area || "";
+    document.getElementById("editFarmPhotos").value = farm.photos || "";
+
+    document.getElementById("editFarmModal").style.display = "flex";
+}
+
+function closeEditFarmModal() {
+    document.getElementById("editFarmModal").style.display = "none";
+    currentEditingFarmId = null;
+}
+
+function saveFarmEdits() {
+    if (!currentEditingFarmId) return;
+
+    const farms = getFarms();
+    const farm = farms.find(f => f.id === currentEditingFarmId);
+    if (!farm) return;
+
+    const oldName = farm.farmName;
+
+    farm.farmName = document.getElementById("editFarmName").value.trim();
+    farm.description = document.getElementById("editFarmDescription").value.trim();
+    farm.area = Number(document.getElementById("editFarmArea").value);
+    farm.photos = Number(document.getElementById("editFarmPhotos").value);
+
+    saveFarms(farms);
+
+    notifyUser(
+        farm.ownerId,
+        "تم تعديل بيانات مزرعتك",
+        `قام المشرف بتعديل بيانات المزرعة ${farm.farmName}.`
+    );
+
+    addLog("تعديل مزرعة", `${oldName} → ${farm.farmName}`);
+
+    closeEditFarmModal();
+    renderFarmsManagement();
+    alert("تم حفظ تعديلات المزرعة بنجاح");
+}
+
+function deleteFarmPermanently(farmId) {
+    const reason = prompt("أدخلي سبب الحذف النهائي:");
+    if (!reason || !reason.trim()) {
+        alert("سبب الحذف إجباري");
+        return;
+    }
+
+    const farms = getFarms();
+    const farm = farms.find(f => f.id === farmId);
+    if (!farm) return;
+
+    const confirmed = confirm(`هل أنتِ متأكدة من حذف المزرعة "${farm.farmName}" نهائيًا؟`);
+    if (!confirmed) return;
+
+    const updatedFarms = farms.filter(f => f.id !== farmId);
+    saveFarms(updatedFarms);
+
+    notifyUser(
+        farm.ownerId,
+        "تم حذف مزرعتك",
+        `تم حذف المزرعة ${farm.farmName} نهائيًا من قبل المشرف. السبب: ${reason}`
+    );
+
+    addLog("حذف مزرعة", `${farm.farmName} - السبب: ${reason}`);
+
+    renderFarmsManagement();
+    alert("تم حذف المزرعة نهائيًا");
+}
+
+function viewFarmProfile(farmId) {
+    const farm = getFarms().find(f => f.id === farmId);
+    if (!farm) return;
+
+    const modal = document.getElementById("farmModal");
+    if (!modal) return;
+
+    document.getElementById("farmModalName").textContent = farm.farmName || "-";
+    document.getElementById("farmModalOwner").textContent = farm.ownerName || "-";
+    document.getElementById("farmModalEmail").textContent = farm.ownerEmail || "-";
+    document.getElementById("farmModalLocation").textContent = farm.location || "-";
+    document.getElementById("farmModalArea").textContent = farm.area ? `${farm.area} م²` : "-";
+    document.getElementById("farmModalPalmType").textContent = farm.palmType || "-";
+    document.getElementById("farmModalStatus").innerHTML = getStatusBadge(farm.status);
+    document.getElementById("farmModalPhotos").textContent = farm.photos ?? "-";
+    document.getElementById("farmModalDescription").textContent = farm.description || "لا يوجد وصف.";
+
+    const extraInfo = [];
+
+    if (farm.rejectionReason) {
+        extraInfo.push(`<li><strong>سبب الرفض:</strong> ${farm.rejectionReason}</li>`);
+    }
+
+    if (farm.deactivationReason) {
+        extraInfo.push(`<li><strong>سبب التعطيل:</strong> ${farm.deactivationReason}</li>`);
+    }
+
+    if (farm.additionalInfoRequest) {
+        extraInfo.push(`<li><strong>طلب معلومات إضافية:</strong> ${farm.additionalInfoRequest}</li>`);
+    }
+
+    if (farm.visibleToInvestors === true) {
+        extraInfo.push(`<li><strong>الظهور للمستثمرين:</strong> ظاهرة في القائمة والخريطة</li>`);
+    } else if (farm.visibleToInvestors === false) {
+        extraInfo.push(`<li><strong>الظهور للمستثمرين:</strong> غير ظاهرة</li>`);
+    }
+
+    document.getElementById("farmModalExtraInfo").innerHTML =
+        extraInfo.length > 0
+            ? extraInfo.join("")
+            : `<li>لا توجد معلومات إضافية.</li>`;
+
+    modal.style.display = "flex";
+    document.body.style.overflow = "hidden";
+}
+
+function closeFarmModal() {
+    const modal = document.getElementById("farmModal");
+    if (!modal) return;
+
+    modal.style.display = "none";
+    document.body.style.overflow = "";
+}
+
+window.addEventListener("click", function(event) {
+    const modal = document.getElementById("farmModal");
+    if (modal && event.target === modal) {
+        closeFarmModal();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        closeFarmModal();
     }
 });
